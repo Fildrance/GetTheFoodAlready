@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 
-using CefSharp.Wpf;
-
 using GetTheFoodAlready.Api.Maps;
 using GetTheFoodAlready.Api.Maps.Requests;
-using GetTheFoodAlready.Ui.Wpf.Support;
+using GetTheFoodAlready.Api.Maps.Responses;
 
 using ReactiveUI;
 
@@ -19,10 +18,9 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#region [Fields]
 		private bool _isPropositionsListOpen;
 		private string _location;
-		private string _selectedLocation;
+		private AddressInfo _selectedLocation;
 		private string _showUrl;
-		private IReadOnlyCollection<string> _locationPropositions;
-		private IWpfWebBrowser _webBrowser;
+		private IReadOnlyCollection<AddressInfo> _locationPropositions;
 
 		private readonly IMapService _mapService;
 		#endregion
@@ -38,12 +36,10 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			_mapService = mapService;
 
 			this.ObservableForProperty(x => x.Location)
-				.Where(x => x.Value.Length > 3)
+				.Where(x => x.Value.Length > 3 && LocationPropositions?.Any(a => a.AddressName == x.Value) != true )
 				.DistinctUntilChanged()
 				.Throttle(TimeSpan.FromMilliseconds(1500))
-				.Subscribe
-				(async x =>
-				{
+				.Subscribe(async x => {
 					var suggestAddressRequest = new SuggestAddressRequest
 					{
 						Substring = x.Value
@@ -56,10 +52,8 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			this.ObservableForProperty(x => x.SelectedLocation)
 				.Where(x => x.Value != null)
 				.Distinct()
-				.Subscribe
-				(x =>
-				{
-					var encoded = Uri.EscapeUriString(x.Value);
+				.Subscribe(x => {
+					var encoded = Uri.EscapeUriString(x.Value.AddressName);
 					var googleMapUrl = $"https://www.google.ru/maps/place/{encoded}/";
 					ShowUrl = googleMapUrl;
 				});
@@ -68,20 +62,6 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 
 		#region [Public]
 		#region [Public properties]
-		public IWpfWebBrowser WebBrowser
-		{
-			get => _webBrowser;
-			set
-			{
-				if (value == null)
-				{
-					return;
-				}
-
-				_webBrowser = value;
-				value.RequestHandler = new HookingRequestHandler();
-			}
-		}
 		public bool IsPropositionsListOpen
 		{
 			get => _isPropositionsListOpen;
@@ -92,12 +72,12 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			get => _location;
 			set => this.RaiseAndSetIfChanged(ref _location, value);
 		}
-		public IReadOnlyCollection<string> LocationPropositions
+		public IReadOnlyCollection<AddressInfo> LocationPropositions
 		{
 			get => _locationPropositions;
 			set => this.RaiseAndSetIfChanged(ref _locationPropositions, value);
 		}
-		public string SelectedLocation
+		public AddressInfo SelectedLocation
 		{
 			get => _selectedLocation;
 			set => this.RaiseAndSetIfChanged(ref _selectedLocation, value);

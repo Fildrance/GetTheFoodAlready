@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Dadata;
 
+using GetTheFoodAlready.Api.Maps.Responses;
+
 using NLog;
 
 namespace GetTheFoodAlready.DaDataBridge
@@ -31,11 +33,13 @@ namespace GetTheFoodAlready.DaDataBridge
 		#endregion
 
 		#region IDaDataClient implementation
-		public async Task<IReadOnlyCollection<string>> SuggestAddresses(string subString)
+		public async Task<IReadOnlyCollection<AddressInfo>> SuggestAddresses(string subString)
 		{
 			Logger.Trace(() => $"Attempting to get suggested addresses for sub-string '{subString}'.");
 			var response = await _api.SuggestAddress(subString);
-			var addresses = response.suggestions.Select(x => x.value);
+			var addresses = response.suggestions.Select(x => 
+				new AddressInfo(x.value, x.data.geo_lat, x.data.geo_lon)
+			);
 			Logger.Trace(() => $"Resolved list of suggested addresses with values '{string.Join(",", addresses)}'");
 			return addresses.ToArray();
 		}

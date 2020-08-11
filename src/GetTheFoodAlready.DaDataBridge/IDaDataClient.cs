@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using GetTheFoodAlready.Api.Maps.Responses;
+
 namespace GetTheFoodAlready.DaDataBridge
 {
 	/// <summary>
@@ -13,6 +15,6 @@ namespace GetTheFoodAlready.DaDataBridge
 		/// </summary>
 		/// <param name="subString">String that contains part of requested address.</param>
 		/// <returns>List of suggested addresses.</returns>
-		Task<IReadOnlyCollection<string>> SuggestAddresses(string subString);
+		Task<IReadOnlyCollection<AddressInfo>> SuggestAddresses(string subString);
 	}
 }

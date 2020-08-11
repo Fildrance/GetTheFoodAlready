@@ -2,10 +2,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vm="clr-namespace:GetTheFoodAlready.Ui.Wpf.ViewModels"
                     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-                    xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf">
+                    xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+					xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+					>
 
 	<DataTemplate DataType="{x:Type vm:PreparationWizardViewModel}">
 		<xctk:Wizard FinishButtonClosesWindow="True">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Next">
+					<i:InvokeCommandAction Command="{Binding NextCommand}"/>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+
 			<xctk:WizardPage x:Name="SetupLocation"
 			                 Title="Choose location"
 			                 Description="This Wizard will walk you though how to do something.">
@@ -32,10 +40,10 @@
 			          ItemsSource="{Binding LocationPropositions}"
 			          IsDropDownOpen="{Binding IsPropositionsListOpen}"
 			          SelectedValue="{Binding SelectedLocation}"
+					  DisplayMemberPath="AddressName"
 			          IsEditable="True"
 			          Height="30" Width="340" Grid.Row="1" HorizontalAlignment="Left" />
 			<wpf:ChromiumWebBrowser Grid.Row="2" x:Name="Browser"
-			                        WebBrowser="{Binding WebBrowser, Mode=OneWayToSource}"
 			                        Address="{Binding ShowUrl}" />
 		</Grid>
 	</DataTemplate>
