@@ -68,6 +68,10 @@
   <ItemGroup>
     <Compile Include="FoodAgregators\Requests\GetClosestVendorPointsRequest.cs" />
     <Compile Include="FoodAgregators\Responses\GetClosestVendorPointsResponse.cs" />
+    <Compile Include="Maps\IMapService.cs" />
+    <Compile Include="Maps\MapService.cs" />
+    <Compile Include="Maps\Requests\SuggestAddressRequest.cs" />
+    <Compile Include="Maps\Responses\SuggestAddressResponse.cs" />
     <Compile Include="Registration\GetTheFoodAlreadyApiInstaller.cs" />
     <Compile Include="FoodAgregators\DeliveryClubService.cs" />
     <Compile Include="FoodAgregators\IDeliveryClubService.cs" />
@@ -79,5 +83,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

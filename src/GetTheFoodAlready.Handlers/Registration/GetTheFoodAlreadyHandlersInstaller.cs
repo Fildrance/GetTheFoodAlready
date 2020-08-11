@@ -1,10 +1,15 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Configuration;
 
+using AutoMapper;
+
+using Castle.Core.Configuration;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
 using GetTheFoodAlready.Api.Support;
+using GetTheFoodAlready.DaDataBridge;
 using GetTheFoodAlready.DeliveryClubBridge;
 using GetTheFoodAlready.Handlers.Behaviours;
 using GetTheFoodAlready.Handlers.MappingProfiles;
@@ -13,6 +18,8 @@ using GetTheFoodAlready.Handlers.Support;
 using MediatR;
 
 using Newtonsoft.Json;
+
+using NLog;
 
 namespace GetTheFoodAlready.Handlers.Registration
 {
@@ -36,6 +43,12 @@ namespace GetTheFoodAlready.Handlers.Registration
 		#region IWindsorInstaller implementation
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
+			var dadataApiKey = ConfigurationManager.AppSettings["dadataApiKey"];
+			if (string.IsNullOrEmpty(dadataApiKey))
+			{
+				throw new InvalidOperationException("Attempting to launch application without property 'dadataApiKey' in appSettings! Cannot proceed withou this api key.");
+			}
+
 			container.Register(
 				// auto-mapper
 				Component.For<Profile>().ImplementedBy<MappingProfile>().LifestyleSingleton(),
@@ -52,7 +65,9 @@ namespace GetTheFoodAlready.Handlers.Registration
 				Component.For<JsonSerializer>().Instance(JsonSerializer.CreateDefault()),
 				Component.For<HttpClientHandlerProvider>().Instance(nested => new LoggingHttpHandler(nested)),
 				
-				Component.For<IDeliveryClubClientFactory>().ImplementedBy<DeliveryClubClientFactory>(),
+				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),
+				Component.For<IDaDataClient>().ImplementedBy<DaDataClient>().LifestyleSingleton()
+					.DependsOn(Dependency.OnValue("token", dadataApiKey)),
 				Component.For<HandlerTypeToImplementationCache>().ImplementedBy<HandlerTypeToImplementationCache>().LifestyleSingleton()
 			);
 
@@ -75,6 +90,7 @@ namespace GetTheFoodAlready.Handlers.Registration
 				container.Register
 				(
 					Component.For(typeof(IPipelineBehavior<,>)).ImplementedBy(typeof(ProfilingBehaviour<,>))
+						.DependsOn(Dependency.OnValue<ILogger>(LogManager.GetLogger("ProfilingBehaviour")))
 				);
 			}
 		}

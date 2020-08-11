@@ -27,6 +27,8 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 				Component.For<ReportCrash>().Instance(reportCrashInstance).LifestyleSingleton(),
 				Component.For<MainWindow>().ImplementedBy<MainWindow>(),
 				Component.For<MainViewModel>().ImplementedBy< MainViewModel>(),
+				Component.For<SetupLocationViewModel>().ImplementedBy<SetupLocationViewModel>(),
+				Component.For<PreparationWizardViewModel>().ImplementedBy<PreparationWizardViewModel>(),
 				Component.For<IMediator>().ImplementedBy<Mediator>(),
 
 				//todo prettify (looks awful!)

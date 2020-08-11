@@ -3,27 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
-        mc:Ignorable="d"
-		Closed="MainWindow_OnClosed"
+		mc:Ignorable="d"
+        Closed="MainWindow_OnClosed"
         Title="MainWindow" Height="900" Width="1600">
-    <Grid>
+	<Window.Resources>
+		<ResourceDictionary Source="Views/VisualComponentsDictionary.xaml"></ResourceDictionary>
+	</Window.Resources>
+	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-		    <RowDefinition />
-		    <RowDefinition Height="Auto" />
-	    </Grid.RowDefinitions>
-		<TextBox Grid.Row="0" Text="{Binding Url}"></TextBox>
-	    <cef:ChromiumWebBrowser Grid.Row="1"
-	                            Name="Browser"
-	                            Address="{Binding Url}" />
-	    <StatusBar Grid.Row="2">
-		    <ProgressBar HorizontalAlignment="Right"
-		                 IsIndeterminate="{Binding Browser.IsLoading}"
-		                 Width="100"
-		                 Height="16"
-		                 Margin="3" />
-		    <Separator />
-	    </StatusBar>
+			<RowDefinition />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<ContentPresenter Content="{Binding CurrentViewModel}"></ContentPresenter>
+
+		<StatusBar Grid.Row="1">
+			<ProgressBar HorizontalAlignment="Right"
+			             IsIndeterminate="{Binding Browser.IsLoading}"
+			             Width="100"
+			             Height="16"
+			             Margin="3" />
+			<Separator />
+		</StatusBar>
 	</Grid>
 </Window>

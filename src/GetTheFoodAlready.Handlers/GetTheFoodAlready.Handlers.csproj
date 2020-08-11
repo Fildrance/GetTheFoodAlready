@@ -70,6 +70,7 @@
     <Compile Include="Behaviours\ProfilingBehaviour.cs" />
     <Compile Include="Behaviours\Session.cs" />
     <Compile Include="Behaviours\SessionBehaviour.cs" />
+    <Compile Include="Map\SuggestAddressHandler.cs" />
     <Compile Include="Support\HandlerTypeToImplementationCache.cs" />
     <Compile Include="Behaviours\LoggingBehaviour.cs" />
     <Compile Include="FoodAgregators\GetClosestVendorPointsHandler.cs" />
@@ -81,6 +82,10 @@
     <ProjectReference Include="..\GetTheFoodAlready.Api\GetTheFoodAlready.Api.csproj">
       <Project>{f3f5d8ec-34aa-464c-bab4-c5bcaeeb2915}</Project>
       <Name>GetTheFoodAlready.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GetTheFoodAlready.DaDataBridge\GetTheFoodAlready.DaDataBridge.csproj">
+      <Project>{7efc2f66-7663-4d21-bb64-db74c1292370}</Project>
+      <Name>GetTheFoodAlready.DaDataBridge</Name>
     </ProjectReference>
     <ProjectReference Include="..\GetTheFoodAlready.DeliveryClubBridge\GetTheFoodAlready.DeliveryClubBridge.csproj">
       <Project>{0d9ff989-6411-49c0-8107-fc60a0328485}</Project>

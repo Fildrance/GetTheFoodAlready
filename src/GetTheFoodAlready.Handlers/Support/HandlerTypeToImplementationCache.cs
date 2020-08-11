@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Castle.MicroKernel;
 using Castle.Windsor;
 
 namespace GetTheFoodAlready.Handlers.Support
@@ -9,11 +10,11 @@ namespace GetTheFoodAlready.Handlers.Support
 	public class HandlerTypeToImplementationCache : Dictionary<Type, Type>
 	{
 		#region [Fields]
-		private readonly IWindsorContainer _container;
+		private readonly IKernel _container;
 		#endregion
 
 		#region [c-tor]
-		public HandlerTypeToImplementationCache(IWindsorContainer container)
+		public HandlerTypeToImplementationCache(IKernel container)
 		{
 			_container = container ?? throw new ArgumentNullException(nameof(container));
 		}
@@ -30,7 +31,7 @@ namespace GetTheFoodAlready.Handlers.Support
 		{
 			if (!TryGetValue(handlerInterfaceType, out var handlerType))
 			{
-				var handler = _container.Kernel.GetHandler(handlerInterfaceType);
+				var handler = _container.GetHandler(handlerInterfaceType);
 				if (handler == null)
 				{
 					this[handlerInterfaceType] = null;
