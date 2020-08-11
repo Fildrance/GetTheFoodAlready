@@ -13,7 +13,8 @@ using MediatR;
 
 namespace GetTheFoodAlready.Handlers.FoodAgregators
 {
-	public class GetClosestRestorauntsHandler : IRequestHandler<GetClosestVendorPointsRequest, GetClosestVendorPointsResponse>
+	/// <summary> Handles request for closest vendor points. </summary>
+	public class GetClosestVendorPointsHandler : IRequestHandler<GetClosestVendorPointsRequest, GetClosestVendorPointsResponse>
 	{
 		#region [Fields]
 		private readonly IDeliveryClubClient _deliveryClubClient;
@@ -21,7 +22,7 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 		#endregion
 
 		#region [c-tor]
-		public GetClosestRestorauntsHandler(
+		public GetClosestVendorPointsHandler(
 			IDeliveryClubClient deliveryClubClient,
 			IMapper mapper
 		)
@@ -34,10 +35,8 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 		#region IRequestHandler<GetClosestRestorauntsRequest,GetClosestRestorauntsResponse> implementation
 		public async Task<GetClosestVendorPointsResponse> Handle(GetClosestVendorPointsRequest request, CancellationToken cancellationToken)
 		{
-			var coordinatesLatitude = 55.867051m;
-			var coordinatesLongitude = 37.594261m;
-
-			var vendorsResp = await _deliveryClubClient.GetDeliveryClubVendorsNearby(coordinatesLongitude, coordinatesLatitude, cancellationToken);
+			
+			var vendorsResp = await _deliveryClubClient.GetDeliveryClubVendorsNearby(request.Longitude, request.Latitude, cancellationToken);
 
 			var vendors = vendorsResp.PagedList.Vendors;
 			var mapped = vendors.Select(_mapper.Map<VendorInfo>)

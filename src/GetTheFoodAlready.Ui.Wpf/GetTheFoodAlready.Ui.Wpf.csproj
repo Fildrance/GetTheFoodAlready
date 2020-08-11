@@ -147,6 +147,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppConstants.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Registration\AppInstaller.cs" />
     <Compile Include="Resources\MessageResources.Designer.cs">
@@ -191,7 +192,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
