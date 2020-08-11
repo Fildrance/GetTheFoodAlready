@@ -13,7 +13,7 @@ namespace GetTheFoodAlready.Handlers.Behaviours
 	{
 		public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
 		{
-			return Session.ExecuteInSession(next());
+			return Session.ExecuteInSession(next);
 		}
 	}
 }

@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using MediatR;
+
 namespace GetTheFoodAlready.Handlers.Behaviours
 {
 	/// <summary> Mediatr call session. Contains root, parent session and current session (if one was declared). </summary>
@@ -37,13 +39,13 @@ namespace GetTheFoodAlready.Handlers.Behaviours
 		/// <summary>
 		/// Executes task within session context.
 		/// </summary>
-		/// <param name="task">Task to be executed.</param>
+		/// <param name="handlerDelegate">Delegate to be executed.</param>
 		/// <returns>Result of requested task.</returns>
-		public static async Task<T> ExecuteInSession<T>(Task<T> task)
+		public static async Task<T> ExecuteInSession<T>(RequestHandlerDelegate<T> handlerDelegate)
 		{
 			var previous = _instance.Value;
 			_instance.Value = new Session(previous, previous?.RootId);
-			var result = await task;
+			var result = await handlerDelegate();
 			_instance.Value = previous;
 			return result;
 		}
