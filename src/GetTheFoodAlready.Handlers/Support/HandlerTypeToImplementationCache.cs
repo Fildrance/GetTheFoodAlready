@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using Castle.MicroKernel;
-using Castle.Windsor;
 
 namespace GetTheFoodAlready.Handlers.Support
 {

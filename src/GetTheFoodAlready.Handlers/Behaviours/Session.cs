@@ -15,17 +15,11 @@ namespace GetTheFoodAlready.Handlers.Behaviours
 			Id = Guid.NewGuid();
 			RootId = rootId ?? Id;
 		}
-		/// <summary>
-		/// Parent session.
-		/// </summary>
+		/// <summary> Parent session. </summary>
 		public Session ParentSession { get; }
-		/// <summary>
-		/// Root session Id.
-		/// </summary>
+		/// <summary> Root session Id. </summary>
 		public Guid? RootId { get; }
-		/// <summary>
-		/// This session Id.
-		/// </summary>
+		/// <summary> This session Id. </summary>
 		public Guid Id { get; }
 
 		/// <summary>

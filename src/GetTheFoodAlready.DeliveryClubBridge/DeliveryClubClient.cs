@@ -10,6 +10,8 @@ using GetTheFoodAlready.DeliveryClubBridge.DataTypes;
 
 using Newtonsoft.Json;
 
+using NLog;
+
 namespace GetTheFoodAlready.DeliveryClubBridge
 {
 	/// <summary> Wraps http client handler into decorators. </summary>
@@ -26,6 +28,10 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 		private const string DeliveryApiVersion = "api1.2";
 		#endregion
 
+		#region [Static fields]
+		private static readonly ILogger Logger = LogManager.GetLogger(typeof(DeliveryClubClient).FullName);
+		#endregion
+
 		#region [Fields]
 		private readonly HttpClient _httpClient;
 		private readonly JsonSerializer _serializer;
@@ -36,11 +42,16 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 		{
 			_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 
-			var nestedHandler = new HttpClientHandler {CookieContainer = new CookieContainer(), UseCookies = true};
+			var nestedHandler = new HttpClientHandler
+			{
+				CookieContainer = new CookieContainer(),
+				UseCookies = true
+			};
+			Logger.Trace("Asking for HttpMessageHandler from provider factory method.");
 			var handlerToBeUsed = provider(nestedHandler);
+			Logger.Trace($"Got '{handlerToBeUsed.GetType().Name}' as top level HttpMessageHandler from provider.");
 			_httpClient = new HttpClient(handlerToBeUsed);
 		}
-
 		#endregion
 
 		#region IDeliveryClubClient implementation
@@ -52,15 +63,20 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 			int take = 200
 		)
 		{
-			var url = $"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/vendors?limit={take}&offset={skip}"
-			          + $"&latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}";
-
+			Logger.Debug("Getting cookies to work with delivery-club api.");
 			// get session to operate further
-			var sessionGetResult = await _httpClient.PostAsync("https://api.delivery-club.ru/api1.2/user/login", new StringContent(""), cancellationToken);
+			var sessionGetResult = await _httpClient.PostAsync($"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/user/login", new StringContent(""), cancellationToken);
+			Logger.Trace(() => $"Api login result is :\r\n {sessionGetResult}");
 			sessionGetResult.EnsureSuccessStatusCode();
 
+			Logger.Debug("Getting list of closest delivery club vendors from delivery-club api.");
+			var url = $"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/vendors?limit={take}&offset={skip}"
+			          + $"&latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}";
+			Logger.Trace($"Url for request is '{url}'. \r\n Attempting to get list of vendor points.");
 			var requestResult = await _httpClient.GetAsync(url, cancellationToken);
+			Logger.Trace(() => $"Get closest vendors result :\r\n {requestResult}");
 			requestResult.EnsureSuccessStatusCode();
+			Logger.Trace("Reading response content.");
 			var requestContent = await requestResult.Content.ReadAsStringAsync();
 
 			var vendorsResp = Deserialize<RootDeliveryClubVendorsResponse>(requestContent);
