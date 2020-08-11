@@ -12,6 +12,13 @@ using Newtonsoft.Json;
 
 namespace GetTheFoodAlready.DeliveryClubBridge
 {
+	/// <summary> Wraps http client handler into decorators. </summary>
+	/// <param name="nested">Original http-client.</param>
+	/// <remarks>Can be used to add additional behaviour, like logging, or just replace original http-client-handler by mock.</remarks>
+	/// <returns>Message handler to be used in HttpClient.</returns>
+	public delegate HttpMessageHandler HttpClientHandlerProvider(HttpClientHandler nested);
+
+	/// <summary> Default implementation of client. </summary>
 	public class DeliveryClubClient : IDeliveryClubClient
 	{
 		#region  [Constants]
@@ -20,35 +27,48 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 		#endregion
 
 		#region [Fields]
+		private readonly HttpClient _httpClient;
 		private readonly JsonSerializer _serializer;
 		#endregion
 
 		#region [c-tor]
-		public DeliveryClubClient(JsonSerializer serializer)
+		public DeliveryClubClient(JsonSerializer serializer, HttpClientHandlerProvider provider)
 		{
 			_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+
+			var nestedHandler = new HttpClientHandler {CookieContainer = new CookieContainer(), UseCookies = true};
+			var handlerToBeUsed = provider(nestedHandler);
+			_httpClient = new HttpClient(handlerToBeUsed);
+		}
+
+		public void Dispose()
+		{
+			_httpClient?.Dispose();
 		}
 		#endregion
 
 		#region IDeliveryClubClient implementation
-		public async Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(decimal longitude, decimal latitude, CancellationToken cancellationToken, int skip = 0, int take = 100)
+		public async Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(
+			decimal longitude,
+			decimal latitude,
+			CancellationToken cancellationToken = default(CancellationToken),
+			int skip = 0,
+			int take = 200
+		)
 		{
-			var cookieContainer = new CookieContainer();
-			var newHandler = new HttpClientHandler {CookieContainer = cookieContainer, UseCookies = true};
-			using (var client = new HttpClient(newHandler))
-			{
-				
-				var url = $"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/vendors?limit={take}&offset={skip}&latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}";
+			var url = $"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/vendors?limit={take}&offset={skip}"
+			          + $"&latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}";
 
-				// get session to operate further
-				var r = await client.PostAsync("https://api.delivery-club.ru/api1.2/user/login", new StringContent(""), cancellationToken);
-				var requestResult = await client.GetAsync(url, cancellationToken);
-				requestResult.EnsureSuccessStatusCode();
-				var requestContent = await requestResult.Content.ReadAsStringAsync();
+			// get session to operate further
+			var sessionGetResult = await _httpClient.PostAsync("https://api.delivery-club.ru/api1.2/user/login", new StringContent(""), cancellationToken);
+			sessionGetResult.EnsureSuccessStatusCode();
 
-				var vendorsResp = Deserialize<RootDeliveryClubVendorsResponse>(requestContent);
-				return vendorsResp;
-			}
+			var requestResult = await _httpClient.GetAsync(url, cancellationToken);
+			requestResult.EnsureSuccessStatusCode();
+			var requestContent = await requestResult.Content.ReadAsStringAsync();
+
+			var vendorsResp = Deserialize<RootDeliveryClubVendorsResponse>(requestContent);
+			return vendorsResp;
 		}
 		#endregion
 

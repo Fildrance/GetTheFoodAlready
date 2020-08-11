@@ -52,7 +52,7 @@ namespace GetTheFoodAlready.Handlers.Registration
 				Component.For<JsonSerializer>().Instance(JsonSerializer.CreateDefault()),
 				Component.For<HttpClientHandlerProvider>().Instance(nested => new LoggingHttpHandler(nested)),
 				
-				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>(),
+				Component.For<IDeliveryClubClientFactory>().ImplementedBy<DeliveryClubClientFactory>(),
 				Component.For<HandlerTypeToImplementationCache>().ImplementedBy<HandlerTypeToImplementationCache>().LifestyleSingleton()
 			);
 

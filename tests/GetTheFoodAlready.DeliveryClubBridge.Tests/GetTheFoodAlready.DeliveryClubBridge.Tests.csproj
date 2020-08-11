@@ -52,13 +52,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Integration\DeliveryClubClientTests.cs" />
-    <Compile Include="LoggingHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\GetTheFoodAlready.Api\GetTheFoodAlready.Api.csproj">
+      <Project>{f3f5d8ec-34aa-464c-bab4-c5bcaeeb2915}</Project>
+      <Name>GetTheFoodAlready.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\GetTheFoodAlready.DeliveryClubBridge\GetTheFoodAlready.DeliveryClubBridge.csproj">
       <Project>{0d9ff989-6411-49c0-8107-fc60a0328485}</Project>
       <Name>GetTheFoodAlready.DeliveryClubBridge</Name>

@@ -1,7 +1,8 @@
 ﻿using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+
+using GetTheFoodAlready.Api.Support;
 
 using Newtonsoft.Json;
 
@@ -15,7 +16,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Integration
 		[SetUp]
 		public void Setup()
 		{
-			_client = new DeliveryClubClient(JsonSerializer.Create(), new LoggingHandler(new HttpClientHandler()));
+			_client = new DeliveryClubClient(JsonSerializer.Create(), nested => new LoggingHttpHandler(nested));
 		}
 
 		[Test]
