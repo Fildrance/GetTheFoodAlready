@@ -17,17 +17,17 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 	public class GetClosestVendorPointsHandler : IRequestHandler<GetClosestVendorPointsRequest, GetClosestVendorPointsResponse>
 	{
 		#region [Fields]
-		private readonly IDeliveryClubClientFactory _factory;
+		private readonly IDeliveryClubClient _client;
 		private readonly IMapper _mapper;
 		#endregion
 
 		#region [c-tor]
 		public GetClosestVendorPointsHandler(
-			IDeliveryClubClientFactory factory,
+			IDeliveryClubClient client,
 			IMapper mapper
 		)
 		{
-			_factory = factory ?? throw new ArgumentNullException(nameof(factory));
+			_client = client ?? throw new ArgumentNullException(nameof(client));
 			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 		}
 		#endregion
@@ -35,15 +35,12 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 		#region IRequestHandler<GetClosestRestorauntsRequest,GetClosestRestorauntsResponse> implementation
 		public async Task<GetClosestVendorPointsResponse> Handle(GetClosestVendorPointsRequest request, CancellationToken cancellationToken)
 		{
-			using (var client = _factory.Create())
-			{
-				var vendorsResp = await client.GetDeliveryClubVendorsNearby(request.Longitude, request.Latitude, cancellationToken);
+				var vendorsResp = await _client.GetDeliveryClubVendorsNearby(request.Longitude, request.Latitude, cancellationToken);
 
 				var vendors = vendorsResp.PagedList.Vendors;
 				var mapped = vendors.Select(_mapper.Map<VendorInfo>)
 					.ToArray();
 				return new GetClosestVendorPointsResponse(mapped);
-			}
 		}
 		
 		#endregion

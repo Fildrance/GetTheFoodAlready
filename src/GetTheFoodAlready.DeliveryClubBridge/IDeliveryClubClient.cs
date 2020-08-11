@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 using GetTheFoodAlready.DeliveryClubBridge.DataTypes;
@@ -9,7 +8,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 	/// <summary>
 	/// Client for interacting with delivery-club api.
 	/// </summary>
-	public interface IDeliveryClubClient : IDisposable
+	public interface IDeliveryClubClient
 	{
 		/// <summary>
 		/// Gets list of vendors, closest to pinpointed location.

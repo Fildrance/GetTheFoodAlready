@@ -58,9 +58,7 @@
   <ItemGroup>
     <Compile Include="DataTypes\DeliveryClubVendor.cs" />
     <Compile Include="DeliveryClubClient.cs" />
-    <Compile Include="DeliveryClubClientFactory.cs" />
     <Compile Include="IDeliveryClubClient.cs" />
-    <Compile Include="IDeliveryClubClientFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -41,10 +41,6 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 			_httpClient = new HttpClient(handlerToBeUsed);
 		}
 
-		public void Dispose()
-		{
-			_httpClient?.Dispose();
-		}
 		#endregion
 
 		#region IDeliveryClubClient implementation
