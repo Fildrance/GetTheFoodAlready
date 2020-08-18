@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using GetTheFoodAlready.Api.Maps.Responses;
+using GetTheFoodAlready.Api.Support;
 
 namespace GetTheFoodAlready.DaDataBridge
 {

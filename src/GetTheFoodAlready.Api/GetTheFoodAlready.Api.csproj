@@ -71,6 +71,7 @@
     <Compile Include="Maps\IMapService.cs" />
     <Compile Include="Maps\MapService.cs" />
     <Compile Include="Maps\Requests\SuggestAddressRequest.cs" />
+    <Compile Include="Support\AddressInfo.cs" />
     <Compile Include="Maps\Responses\SuggestAddressResponse.cs" />
     <Compile Include="Registration\GetTheFoodAlreadyApiInstaller.cs" />
     <Compile Include="FoodAgregators\DeliveryClubService.cs" />

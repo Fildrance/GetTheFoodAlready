@@ -165,13 +165,26 @@
     </ApplicationDefinition>
     <Compile Include="AppConstants.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Registration\AppInstaller.cs" />
+    <Compile Include="Resources\BrowserHelper.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BrowserHelper.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\MessageResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MessageResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Support\DefaultLocationManager.cs" />
+    <Compile Include="Support\IDefaultLocationManager.cs" />
     <Compile Include="Support\SingleAppInstanceHelper.cs" />
+    <Compile Include="Support\FrameLoadEndWatchingHandler.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\PreparationWizardViewModel.cs" />
     <Compile Include="ViewModels\SetupLocationViewModel.cs" />
@@ -208,11 +221,21 @@
     <EmbeddedResource Include="Resources\MessageResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MessageResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\MessageResources.ru-RU.resx" />
+    <EmbeddedResource Include="Resources\MessageResources.ru-RU.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\BrowserHelper.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BrowserHelper.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Content Include="Resources\SetupLocationGoogleMapsDummy.html" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -221,6 +244,10 @@
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup />

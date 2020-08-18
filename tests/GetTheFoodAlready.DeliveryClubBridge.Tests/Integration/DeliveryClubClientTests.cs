@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 
 using GetTheFoodAlready.Api.Support;
 
-using Newtonsoft.Json;
-
 using NUnit.Framework;
 
 namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Integration
@@ -16,7 +14,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Integration
 		[SetUp]
 		public void Setup()
 		{
-			_client = new DeliveryClubClient(JsonSerializer.Create(), nested => new LoggingHttpHandler(nested));
+			_client = new DeliveryClubClient(nested => new LoggingHttpHandler(nested));
 		}
 
 		[Test]

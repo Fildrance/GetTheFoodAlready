@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -11,6 +12,7 @@ using CrashReporterDotNET;
 
 using GetTheFoodAlready.Api.Registration;
 using GetTheFoodAlready.Handlers.Registration;
+using GetTheFoodAlready.Ui.Wpf.Support;
 using GetTheFoodAlready.Ui.Wpf.ViewModels;
 
 using MediatR;
@@ -25,11 +27,12 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 
 			container.Register(
 				Component.For<ReportCrash>().Instance(reportCrashInstance).LifestyleSingleton(),
-				Component.For<MainWindow>().ImplementedBy<MainWindow>(),
-				Component.For<MainViewModel>().ImplementedBy< MainViewModel>(),
-				Component.For<SetupLocationViewModel>().ImplementedBy<SetupLocationViewModel>(),
-				Component.For<PreparationWizardViewModel>().ImplementedBy<PreparationWizardViewModel>(),
+				Component.For<MainWindow>().ImplementedBy<MainWindow>().LifestyleSingleton(),
+				Component.For<MainViewModel>().ImplementedBy<MainViewModel>().LifestyleSingleton(),
+				Component.For<SetupLocationViewModel>().ImplementedBy<SetupLocationViewModel>().LifestyleSingleton().OnCreate(async x => await x.SetupObservables().SetupDefaultLocation()),
+				Component.For<PreparationWizardViewModel>().ImplementedBy<PreparationWizardViewModel>().LifestyleSingleton(),
 				Component.For<IMediator>().ImplementedBy<Mediator>(),
+				Component.For<IDefaultLocationManager>().ImplementedBy<DefaultLocationManager>().LifestyleSingleton(),
 
 				//todo prettify (looks awful!)
 				Component.For<ServiceFactory>().UsingFactoryMethod<ServiceFactory>(k => (type =>
@@ -57,6 +60,7 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 
 			AppDomain.CurrentDomain.UnhandledException += (sender, unhandledExceptionEventArgs) => { reportCrashInstance.Send((Exception) unhandledExceptionEventArgs.ExceptionObject); };
 			TaskScheduler.UnobservedTaskException += (sender, unobservedTaskExceptionEventArgs) => { reportCrashInstance.Send(unobservedTaskExceptionEventArgs.Exception); };
+			Application.Current.DispatcherUnhandledException += (s, ex) => { reportCrashInstance.Send(ex.Exception);};
 
 			return reportCrashInstance;
 		}

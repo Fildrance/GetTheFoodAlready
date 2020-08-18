@@ -120,4 +120,7 @@
   <data name="ApplicationAlreadyRunning" xml:space="preserve">
     <value>This application is already running, only one instance is allowed.</value>
   </data>
+  <data name="FailedToFindGoToMarkMethod" xml:space="preserve">
+    <value>Application failed to find "goToMark" method on window object of cefBrowser page, which is expected for navigating to user-picked location. This can be caused by changes in dummy-html that is used as user location setup page.</value>
+  </data>
 </root>

@@ -22,14 +22,14 @@ namespace GetTheFoodAlready.Ui.Wpf.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class MessageResources {
+    internal class BrowserHelper {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal MessageResources() {
+        internal BrowserHelper() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace GetTheFoodAlready.Ui.Wpf.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GetTheFoodAlready.Ui.Wpf.Resources.MessageResources", typeof(MessageResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GetTheFoodAlready.Ui.Wpf.Resources.BrowserHelper", typeof(BrowserHelper).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,21 @@ namespace GetTheFoodAlready.Ui.Wpf.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на This application is already running, only one instance is allowed..
+        ///   Ищет локализованную строку, похожую на &lt;!DOCTYPE html&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
+        ///	&lt;script src=&quot;https://code.jquery.com/jquery-3.5.1.min.js&quot;
+        ///	        integrity=&quot;sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=&quot;
+        ///	        crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+        ///	&lt;script src=&quot;https://polyfill.io/v3/polyfill.min.js?features=default&quot;&gt;&lt;/script&gt;
+        ///	&lt;script src=&quot;https://maps.googleapis.com/maps/api/js?key=AIzaSyDq3LH7PoQlHWUil0vLdUt3Bc7J5Hyjksc&amp;callback=initMap&amp;libraries=geometry,places&amp;v=weekly&amp;language=ru&quot;
+        ///	        defer&gt;&lt;/script&gt;
+        ///	&lt;style&gt;
+        ///		#map { height: 10 [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string ApplicationAlreadyRunning {
+        internal static string SetupLocationGoogleMapsDummy {
             get {
-                return ResourceManager.GetString("ApplicationAlreadyRunning", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Application failed to find &quot;goToMark&quot; method on window object of cefBrowser page, which is expected for navigating to user-picked location. This can be caused by changes in dummy-html that is used as user location setup page..
-        /// </summary>
-        internal static string FailedToFindGoToMarkMethod {
-            get {
-                return ResourceManager.GetString("FailedToFindGoToMarkMethod", resourceCulture);
+                return ResourceManager.GetString("SetupLocationGoogleMapsDummy", resourceCulture);
             }
         }
     }

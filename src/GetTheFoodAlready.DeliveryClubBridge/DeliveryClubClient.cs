@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -34,14 +32,11 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 
 		#region [Fields]
 		private readonly HttpClient _httpClient;
-		private readonly JsonSerializer _serializer;
 		#endregion
 
 		#region [c-tor]
-		public DeliveryClubClient(JsonSerializer serializer, HttpClientHandlerProvider provider)
+		public DeliveryClubClient(HttpClientHandlerProvider provider)
 		{
-			_serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
-
 			var nestedHandler = new HttpClientHandler
 			{
 				CookieContainer = new CookieContainer(),
@@ -79,20 +74,10 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 			Logger.Trace("Reading response content.");
 			var requestContent = await requestResult.Content.ReadAsStringAsync();
 
-			var vendorsResp = Deserialize<RootDeliveryClubVendorsResponse>(requestContent);
+			var vendorsResp = JsonConvert.DeserializeObject<RootDeliveryClubVendorsResponse>(requestContent);
 			return vendorsResp;
 		}
 		#endregion
 
-		#region [Private]
-		#region [Private methods]
-		private T Deserialize<T>(string content)
-		{
-			var stringReader = new StringReader(content);
-			var jsonTextReader = new JsonTextReader(stringReader);
-			return _serializer.Deserialize<T>(jsonTextReader);
-		}
-		#endregion
-		#endregion
 	}
 }

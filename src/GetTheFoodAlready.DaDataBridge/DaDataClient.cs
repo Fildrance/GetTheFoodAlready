@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Dadata;
 
-using GetTheFoodAlready.Api.Maps.Responses;
+using GetTheFoodAlready.Api.Support;
 
 using NLog;
 

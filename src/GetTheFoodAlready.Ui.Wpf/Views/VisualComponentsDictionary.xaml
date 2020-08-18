@@ -43,8 +43,9 @@
 					  DisplayMemberPath="AddressName"
 			          IsEditable="True"
 			          Height="30" Width="340" Grid.Row="1" HorizontalAlignment="Left" />
-			<wpf:ChromiumWebBrowser Grid.Row="2" x:Name="Browser"
-			                        Address="{Binding ShowUrl}" />
+			<wpf:ChromiumWebBrowser Grid.Row="2" x:Name="CefBrowser"
+			                        WebBrowser="{Binding Browser, Mode=TwoWay}"
+			                        />
 		</Grid>
 	</DataTemplate>
 </ResourceDictionary>
