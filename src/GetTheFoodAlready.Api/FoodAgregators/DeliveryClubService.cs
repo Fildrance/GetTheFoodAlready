@@ -24,7 +24,11 @@ namespace GetTheFoodAlready.Api.FoodAgregators
 
 		#region [Public]
 		#region [Public methods]
-		public Task<GetClosestVendorPointsResponse> GetClosestVendorPoints(GetClosestVendorPointsRequest request, CancellationToken cancellationToken)
+		public Task<ClosestVendorPointsGetResponse> GetClosestVendorPoints(ClosestVendorPointsGetRequest request, CancellationToken cancellationToken)
+		{
+			return _mediator.Send(request, cancellationToken);
+		}
+		public Task<FoodInfoGetResponse> GetFoodInfo(FoodInfoGetRequest request, CancellationToken cancellationToken)
 		{
 			return _mediator.Send(request, cancellationToken);
 		}

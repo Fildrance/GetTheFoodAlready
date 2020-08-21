@@ -4,6 +4,7 @@ using Castle.Windsor;
 
 using GetTheFoodAlready.Api.FoodAgregators;
 using GetTheFoodAlready.Api.Maps;
+using GetTheFoodAlready.Api.Orchestration;
 
 namespace GetTheFoodAlready.Api.Registration
 {
@@ -13,7 +14,8 @@ namespace GetTheFoodAlready.Api.Registration
 		{
 			container.Register(
 				Component.For<IDeliveryClubService>().ImplementedBy<DeliveryClubService>(),
-				Component.For<IMapService>().ImplementedBy<MapService>()
+				Component.For<IMapService>().ImplementedBy<MapService>(),
+				Component.For<IOrchestrationService>().ImplementedBy<OrchestrationService>()
 			);
 		}
 	}

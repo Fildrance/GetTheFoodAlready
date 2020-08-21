@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -51,8 +51,8 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 
 		#region IDeliveryClubClient implementation
 		public async Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(
-			decimal longitude,
-			decimal latitude,
+			string longitude,
+			string latitude,
 			CancellationToken cancellationToken = default(CancellationToken),
 			int skip = 0,
 			int take = 200
@@ -66,7 +66,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 
 			Logger.Debug("Getting list of closest delivery club vendors from delivery-club api.");
 			var url = $"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/vendors?limit={take}&offset={skip}"
-			          + $"&latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}";
+			          + $"&latitude={latitude}&longitude={longitude}";
 			Logger.Trace($"Url for request is '{url}'. \r\n Attempting to get list of vendor points.");
 			var requestResult = await _httpClient.GetAsync(url, cancellationToken);
 			Logger.Trace(() => $"Get closest vendors result :\r\n {requestResult}");
@@ -76,6 +76,11 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 
 			var vendorsResp = JsonConvert.DeserializeObject<RootDeliveryClubVendorsResponse>(requestContent);
 			return vendorsResp;
+		}
+
+		public Task<DeliveryClubFoodInfo> GetFoodInfo(int vendorPointId, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
 		}
 		#endregion
 

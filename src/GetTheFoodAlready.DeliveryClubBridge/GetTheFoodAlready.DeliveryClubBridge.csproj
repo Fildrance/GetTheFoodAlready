@@ -56,7 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="DataTypes\DeliveryClubVendor.cs" />
+    <Compile Include="DataTypes\DeliveryClubFoodInfo.cs" />
     <Compile Include="DeliveryClubClient.cs" />
     <Compile Include="IDeliveryClubClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

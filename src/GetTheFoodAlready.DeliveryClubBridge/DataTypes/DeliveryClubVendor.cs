@@ -45,11 +45,6 @@ namespace GetTheFoodAlready.DeliveryClubBridge.DataTypes
 		public string Time { get; set; }
 	}
 
-	public class Id2
-	{
-		public string Primary { get; set; }
-	}
-
 	public class Payment
 	{
 		public string Type { get; set; }
@@ -77,7 +72,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge.DataTypes
 		public Chain Chain { get; set; }
 		public List<string> Cuisines { get; set; }
 		public Delivery Delivery { get; set; }
-		public Id2 Id { get; set; }
+		public Id Id { get; set; }
 		public List<string> Labels { get; set; }
 		public string Logo { get; set; }
 		public string Name { get; set; }
@@ -94,6 +89,11 @@ namespace GetTheFoodAlready.DeliveryClubBridge.DataTypes
 		public bool HasMore { get; set; }
 		[JsonProperty("items")]
 		public List<DeliveryClubVendor> Vendors { get; set; }
+
+		public override string ToString()
+		{
+			return $"Vendor list with {Vendors.Count} items, addtional info - Count:{Count}, HasMore:{HasMore}";
+		}
 	}
 	public class RootDeliveryClubVendorsResponse
 	{

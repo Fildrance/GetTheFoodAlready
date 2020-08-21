@@ -7,9 +7,9 @@ namespace GetTheFoodAlready.Api.FoodAgregators.Requests
 	/// <summary>
 	/// Request data for getting closest vendor points. 
 	/// </summary>
-	public sealed class GetClosestVendorPointsRequest : IRequest<GetClosestVendorPointsResponse>
+	public sealed class ClosestVendorPointsGetRequest : IRequest<ClosestVendorPointsGetResponse>
 	{
-		public decimal Longitude { get; set; }
-		public decimal Latitude { get; set; }
+		public string Longitude { get; set; }
+		public string Latitude { get; set; }
 	}
 }

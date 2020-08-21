@@ -25,7 +25,7 @@ namespace GetTheFoodAlready.Ui.Wpf
 		#region [Application overrides]
 		protected override void OnExit(ExitEventArgs e)
 		{
-			Logger.Debug("Application is shutting down.");
+			Logger.Debug($"Application is shutting down. Exit code is {e.ApplicationExitCode}.");
 			_container?.Dispose();
 			_singleAppHelper?.Dispose();
 			base.OnExit(e);

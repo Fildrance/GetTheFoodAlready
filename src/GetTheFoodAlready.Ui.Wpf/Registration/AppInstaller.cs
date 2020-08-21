@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,12 +26,22 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 		{
 			var reportCrashInstance = CreateReportCrashInstance();
 
+			var googleApiKey = ConfigurationManager.AppSettings["googleApiKey"];
+
 			container.Register(
-				Component.For<ReportCrash>().Instance(reportCrashInstance).LifestyleSingleton(),
 				Component.For<MainWindow>().ImplementedBy<MainWindow>().LifestyleSingleton(),
+
 				Component.For<MainViewModel>().ImplementedBy<MainViewModel>().LifestyleSingleton(),
-				Component.For<SetupLocationViewModel>().ImplementedBy<SetupLocationViewModel>().LifestyleSingleton().OnCreate(async x => await x.SetupObservables().SetupDefaultLocation()),
+
+				Component.For<ReportCrash>().Instance(reportCrashInstance).LifestyleSingleton(),
+				Component.For<SetupLocationViewModel>().ImplementedBy<SetupLocationViewModel>().LifestyleSingleton()
+					.DependsOn(Dependency.OnValue("googleApiKey", googleApiKey))
+					.OnCreate(async x => await x.SetupObservables().SetupDefaultLocation()),
 				Component.For<PreparationWizardViewModel>().ImplementedBy<PreparationWizardViewModel>().LifestyleSingleton(),
+				Component.For<FoodsListViewModel>().ImplementedBy<FoodsListViewModel>().LifestyleSingleton(),
+				Component.For<SetupVendorPointBasicPreferencesViewModel> ().ImplementedBy<SetupVendorPointBasicPreferencesViewModel>().LifestyleSingleton(),
+				Component.For<SetupFoodPreferencesViewModel> ().ImplementedBy<SetupFoodPreferencesViewModel>().LifestyleSingleton(),
+
 				Component.For<IMediator>().ImplementedBy<Mediator>(),
 				Component.For<IDefaultLocationManager>().ImplementedBy<DefaultLocationManager>().LifestyleSingleton(),
 

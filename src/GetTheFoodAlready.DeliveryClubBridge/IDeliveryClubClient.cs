@@ -19,6 +19,14 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 		/// <param name="skip">Count of elements to skip. Default is 0.</param>
 		/// <param name="take">Count of elements to take. Default is 200.</param>
 		/// <returns>Container with paged list of nearby vendor points.</returns>
-		Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(decimal longitude, decimal latitude, CancellationToken cancellationToken = default(CancellationToken), int skip = 0, int take = 200);
+		Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(string longitude, string latitude, CancellationToken cancellationToken = default(CancellationToken), int skip = 0, int take = 200);
+
+		/// <summary>
+		/// Gets list of food items by vendor point id.
+		/// </summary>
+		/// <param name="vendorPointId">Id of vendor point to be asked for menu.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns>Container with list of menu items and menu categories.</returns>
+		Task<DeliveryClubFoodInfo> GetFoodInfo(int vendorPointId, CancellationToken cancellationToken);
 	}
 }

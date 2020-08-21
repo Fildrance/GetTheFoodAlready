@@ -66,11 +66,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FoodAgregators\Requests\GetClosestVendorPointsRequest.cs" />
-    <Compile Include="FoodAgregators\Responses\GetClosestVendorPointsResponse.cs" />
+    <Compile Include="FoodAgregators\Requests\FoodInfoGetRequest.cs" />
+    <Compile Include="FoodAgregators\Responses\FoodInfoGetResponse.cs" />
+    <Compile Include="FoodAgregators\Requests\ClosestVendorPointsGetRequest.cs" />
+    <Compile Include="FoodAgregators\Responses\ClosestVendorPointsGetResponse.cs" />
     <Compile Include="Maps\IMapService.cs" />
     <Compile Include="Maps\MapService.cs" />
     <Compile Include="Maps\Requests\SuggestAddressRequest.cs" />
+    <Compile Include="Orchestration\IOrchestrationService.cs" />
+    <Compile Include="Orchestration\OrchestrationService.cs" />
+    <Compile Include="Orchestration\Requests\RandomFoodPropositionsRequest.cs" />
+    <Compile Include="Orchestration\Reponses\RandomFoodPropositionsResponse.cs" />
     <Compile Include="Support\AddressInfo.cs" />
     <Compile Include="Maps\Responses\SuggestAddressResponse.cs" />
     <Compile Include="Registration\GetTheFoodAlreadyApiInstaller.cs" />

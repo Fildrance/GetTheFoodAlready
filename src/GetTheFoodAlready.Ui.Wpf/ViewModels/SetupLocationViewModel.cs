@@ -30,25 +30,31 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#endregion
 
 		#region [Fields]
-		private readonly Subject<AddressInfo> _defaultLocation = new Subject<AddressInfo>();
-		private readonly Subject<IFrame> _mainFrameLoadEnd = new Subject<IFrame>();
+		private readonly ISubject<AddressInfo> _defaultLocation = new ReplaySubject<AddressInfo>(1);
+		private readonly ISubject<IFrame> _mainFrameLoadEnd = new Subject<IFrame>();
 
 		private IWebBrowser _browser;
 		private string _location;
 		private IList<AddressInfo> _locationPropositions = new List<AddressInfo>();
 		private AddressInfo _selectedLocation;
 		private bool _isPropositionsListOpen;
-		private bool _locationSetCalledFromMapClick;
+		private bool _locationUpdateShouldIgnoreMapControl;
 
 		private readonly IDefaultLocationManager _defaultLocationManager;
 		private readonly IMapService _mapService;
+		private readonly string _googleApiKey;
 		#endregion
 
 		#region [c-tor]
-		public SetupLocationViewModel(IMapService mapService, IDefaultLocationManager defaultLocationManager)
+		public SetupLocationViewModel(
+			IMapService mapService, 
+			IDefaultLocationManager defaultLocationManager, 
+			string googleApiKey
+		)
 		{
 			_mapService = mapService ?? throw new ArgumentNullException(nameof(mapService));
 			_defaultLocationManager = defaultLocationManager ?? throw new ArgumentNullException(nameof(defaultLocationManager));
+			_googleApiKey = googleApiKey;
 		}
 		#endregion
 
@@ -85,8 +91,13 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		public AddressInfo SelectedLocation
 		{
 			get => _selectedLocation;
-			set => this.RaiseAndSetIfChanged(ref _selectedLocation, value);
+			set
+			{
+				this.RaiseAndSetIfChanged(ref _selectedLocation, value);
+				this.RaisePropertyChanged(nameof(CanGoNext));
+			}
 		}
+		public bool CanGoNext => SelectedLocation != null;
 		#endregion
 
 		#region [Public methods]
@@ -101,10 +112,25 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		public SetupLocationViewModel SetupObservables()
 		{
 			this.ObservableForProperty(x => x.Location)
-				.Where(x => x.Value.Length >= 3 && LocationPropositions?.Any(a => a.AddressName == x.Value) != true)
-				.DistinctUntilChanged()
+				.Where(x => 
+					(x.Value.Length >= 3
+					|| x.Value.Length == 0)
+					&& LocationPropositions?.Any(a => a.AddressName == x.Value) != true
+				).DistinctUntilChanged()
 				.Throttle(TimeSpan.FromMilliseconds(1500))
 				.Subscribe(async x => {
+					if (string.IsNullOrEmpty(x.Value))
+					{
+						SelectedLocation = null;
+						return;
+					}
+
+					if (_locationUpdateShouldIgnoreMapControl)
+					{
+						_locationUpdateShouldIgnoreMapControl = false;
+						return;
+					}
+
 					var suggestAddressRequest = new SuggestAddressRequest
 					{
 						Substring = x.Value
@@ -118,9 +144,9 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 				.Where(x => x.Value != null)
 				.Distinct()
 				.Subscribe(x => {
-					if (_locationSetCalledFromMapClick)
+					if (_locationUpdateShouldIgnoreMapControl)
 					{
-						_locationSetCalledFromMapClick = false;
+						Location = x.Value.AddressName;
 						return;
 					}
 
@@ -129,7 +155,10 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 						.ExecuteJavaScriptAsync(command);
 				});
 
-			_defaultLocation.Zip(
+			_defaultLocation.Do(x => {
+					_locationUpdateShouldIgnoreMapControl = true;
+					SelectedLocation = x;
+				}).Zip(
 					_mainFrameLoadEnd.Where(x => x.IsMain), 
 					(a, f) => (Address: a, Frame: f)
 				).Subscribe(x => {
@@ -163,9 +192,8 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 
 			// set new point to selected address.
 			// _locationSetCalledFromMapClick flag is true to not force map call with new point (because it was provided by map, mark is already set correctly)
-			_locationSetCalledFromMapClick = true;
+			_locationUpdateShouldIgnoreMapControl = true;
 			SelectedLocation = addressInfo;
-			Location = addressInfo.AddressName;
 		}
 
 		private void PrepareBrowser(IWebBrowser browser)
@@ -177,7 +205,8 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 				MessageBox.Show(args.Message);
 			};
 			// render dummy page with required js code for google maps & google maps javascript api.
-			browser.LoadHtml(BrowserHelper.SetupLocationGoogleMapsDummy, "https://localhost/", Encoding.UTF8);
+			var html = BrowserHelper.SetupLocationGoogleMapsDummy.Replace("<GOOGLE_API_KEY>", _googleApiKey);
+			browser.LoadHtml(html, "https://localhost/", Encoding.UTF8);
 			browser.LoadHandler = new FrameLoadEndWatchingHandler(_mainFrameLoadEnd);
 
 			// add hook in js to call HandleOnMapClick.
@@ -209,6 +238,10 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			{
 				_onMapClickAction(lat, lng, name);
 			}
+		}
+		public void SaveSelected()
+		{
+			_defaultLocationManager.SaveDefault(SelectedLocation);
 		}
 	}
 }

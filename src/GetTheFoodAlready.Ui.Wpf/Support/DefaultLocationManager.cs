@@ -74,6 +74,13 @@ namespace GetTheFoodAlready.Ui.Wpf.Support
 
 			return found;
 		}
+
+		public void SaveDefault(AddressInfo addressInfo)
+		{
+			var settings = Settings.Default;
+			settings.DefaultUserLocationAddress = JsonConvert.SerializeObject(addressInfo);
+			settings.Save();
+		}
 		#endregion
 
 		#region [Private]

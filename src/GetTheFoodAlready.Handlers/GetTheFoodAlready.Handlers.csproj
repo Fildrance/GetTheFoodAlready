@@ -70,7 +70,9 @@
     <Compile Include="Behaviours\ProfilingBehaviour.cs" />
     <Compile Include="Behaviours\Session.cs" />
     <Compile Include="Behaviours\SessionBehaviour.cs" />
+    <Compile Include="FoodAgregators\FoodInfoGetHandler.cs" />
     <Compile Include="Map\SuggestAddressHandler.cs" />
+    <Compile Include="Orchestration\GetRandomFoodPropositionsHandler.cs" />
     <Compile Include="Support\HandlerTypeToImplementationCache.cs" />
     <Compile Include="Behaviours\LoggingBehaviour.cs" />
     <Compile Include="FoodAgregators\GetClosestVendorPointsHandler.cs" />

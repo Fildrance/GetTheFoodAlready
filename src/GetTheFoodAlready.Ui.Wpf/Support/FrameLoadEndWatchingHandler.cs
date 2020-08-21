@@ -8,11 +8,11 @@ namespace GetTheFoodAlready.Ui.Wpf.Support
 	public class FrameLoadEndWatchingHandler : ILoadHandler
 	{
 		#region [Fields]
-		private readonly Subject<IFrame> _subj;
+		private readonly ISubject<IFrame> _subj;
 		#endregion
 
 		#region [c-tor]
-		public FrameLoadEndWatchingHandler(Subject<IFrame> subj)
+		public FrameLoadEndWatchingHandler(ISubject<IFrame> subj)
 		{
 			_subj = subj;
 		}

@@ -2,10 +2,10 @@
 
 namespace GetTheFoodAlready.Api.FoodAgregators.Responses
 {
-	public class GetClosestVendorPointsResponse
+	public class ClosestVendorPointsGetResponse
 	{
 		#region [c-tor]
-		public GetClosestVendorPointsResponse(IReadOnlyCollection<VendorInfo> vendors)
+		public ClosestVendorPointsGetResponse(IReadOnlyCollection<VendorInfo> vendors)
 		{
 			Vendors = vendors;
 		}
@@ -29,7 +29,9 @@ namespace GetTheFoodAlready.Api.FoodAgregators.Responses
 
 		public string RatingScore { get; set; }
 		public int? ReviewCount { get; set; }
-		public string Score { get; set; }
+		public int? Score { get; set; }
 		public int? ScoreCount { get; set; }
+		public string DeliveryTime { get; set; }
+		public bool IsDeliveringForFree { get; set; }
 	}
 }

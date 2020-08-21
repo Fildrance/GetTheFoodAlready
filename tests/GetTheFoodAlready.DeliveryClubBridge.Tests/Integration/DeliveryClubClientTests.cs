@@ -21,8 +21,8 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Integration
 		public void GetDeliveryClubVendorsNearby_PassMoscowCoordinates_DoesntThrow()
 		{
 			//arrange
-			var coordinatesLatitude = 55.867051m;
-			var coordinatesLongitude = 37.594261m;
+			var coordinatesLatitude = "55.867051m";
+			var coordinatesLongitude = "37.594261m";
 			//act
 			//assert
 			Assert.DoesNotThrowAsync(async () => await _client.GetDeliveryClubVendorsNearby(coordinatesLongitude, coordinatesLatitude, CancellationToken.None));
@@ -32,8 +32,8 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Integration
 		public async Task GetDeliveryClubVendorsNearby_PassCertainMoscowCoordinates_ReturnProntoAltuf()
 		{
 			//arrange
-			var coordinatesLatitude = 55.867051m;
-			var coordinatesLongitude = 37.594261m;
+			var coordinatesLatitude = "55.867051m";
+			var coordinatesLongitude = "37.594261m";
 			//act
 			var result = await _client.GetDeliveryClubVendorsNearby(coordinatesLongitude, coordinatesLatitude, CancellationToken.None);
 			//assert

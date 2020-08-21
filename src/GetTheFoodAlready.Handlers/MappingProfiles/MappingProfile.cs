@@ -3,6 +3,7 @@
 using AutoMapper;
 
 using GetTheFoodAlready.Api.FoodAgregators.Responses;
+using GetTheFoodAlready.DeliveryClubBridge;
 using GetTheFoodAlready.DeliveryClubBridge.DataTypes;
 
 namespace GetTheFoodAlready.Handlers.MappingProfiles
@@ -21,7 +22,11 @@ namespace GetTheFoodAlready.Handlers.MappingProfiles
 				.ForMember(x => x.RatingScore, opts => opts.MapFrom(src => src.Reviews.RatingScore))
 				.ForMember(x => x.ReviewCount, opts => opts.MapFrom(src => src.Reviews.ReviewCount))
 				.ForMember(x => x.Score, opts => opts.MapFrom(src => src.Reviews.Score))
-				.ForMember(x => x.ScoreCount, opts => opts.MapFrom(src => src.Reviews.ScoreCount));
+				.ForMember(x => x.ScoreCount, opts => opts.MapFrom(src => src.Reviews.ScoreCount))
+				.ForMember(x => x.DeliveryTime, opts => opts.MapFrom(src => src.Delivery.Time))
+				.ForMember(x => x.IsDeliveringForFree, opts => opts.MapFrom(src => src.Labels.Any(label => label == DeliveryClubConstants.FreeDeliveryLabel)));
+
+			CreateMap<MenuItem, FoodInfo>();
 		}
 	}
 }
