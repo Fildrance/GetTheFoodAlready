@@ -19,15 +19,6 @@ namespace GetTheFoodAlready.Ui.Wpf.Support
 		private Mutex _singleApplicationMutex;
 		#endregion
 
-		#region [c-tor]
-		public void Dispose()
-		{
-			_otherInstanceLaunchWatcherThread?.Abort();
-			_sameAppInitializationAttempted?.Dispose();
-			_singleApplicationMutex?.Dispose();
-		}
-		#endregion
-
 		#region [Public]
 		#region [Public methods]
 		/// <summary>
@@ -61,6 +52,12 @@ namespace GetTheFoodAlready.Ui.Wpf.Support
 			// notifies other instance of same application that there was concurrent instance initialization attempt.
 			_sameAppInitializationAttempted.Set();
 			return false;
+		}
+		public void Dispose()
+		{
+			_otherInstanceLaunchWatcherThread?.Abort();
+			_sameAppInitializationAttempted?.Dispose();
+			_singleApplicationMutex?.Dispose();
 		}
 		#endregion
 		#endregion

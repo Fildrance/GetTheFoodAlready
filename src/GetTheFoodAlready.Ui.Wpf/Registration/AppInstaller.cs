@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -12,16 +11,21 @@ using Castle.Windsor;
 using CrashReporterDotNET;
 
 using GetTheFoodAlready.Api.Registration;
+using GetTheFoodAlready.Handlers;
 using GetTheFoodAlready.Handlers.Registration;
 using GetTheFoodAlready.Ui.Wpf.Support;
 using GetTheFoodAlready.Ui.Wpf.ViewModels;
 
 using MediatR;
 
+using NLog;
+
 namespace GetTheFoodAlready.Ui.Wpf.Registration
 {
 	public class AppInstaller : IWindsorInstaller
 	{
+		private static readonly ILogger Logger = LogManager.GetLogger(typeof(App).FullName);
+
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
 			var reportCrashInstance = CreateReportCrashInstance();
@@ -61,6 +65,7 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 				new GetTheFoodAlreadyHandlersInstaller()
 			);
 		}
+
 		private static ReportCrash CreateReportCrashInstance()
 		{
 			var reportCrashInstance = new ReportCrash("fildrance@gmail.com")
@@ -68,12 +73,26 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 				Silent = false,
 				CaptureScreen = false
 			};
-
-			AppDomain.CurrentDomain.UnhandledException += (sender, unhandledExceptionEventArgs) => { reportCrashInstance.Send((Exception) unhandledExceptionEventArgs.ExceptionObject); };
-			TaskScheduler.UnobservedTaskException += (sender, unobservedTaskExceptionEventArgs) => { reportCrashInstance.Send(unobservedTaskExceptionEventArgs.Exception); };
-			Application.Current.DispatcherUnhandledException += (s, ex) => { reportCrashInstance.Send(ex.Exception);};
+			//todo: possibly add some class that will wrap reportCrash calls.
+			AppDomain.CurrentDomain.UnhandledException += (sender, unhandledExceptionEventArgs) => { HandleException(unhandledExceptionEventArgs.ExceptionObject as Exception, reportCrashInstance); };
+			TaskScheduler.UnobservedTaskException += (sender, unobservedTaskExceptionEventArgs) => { HandleException(unobservedTaskExceptionEventArgs.Exception, reportCrashInstance); };
 
 			return reportCrashInstance;
+		}
+		private static void HandleException(Exception exception, ReportCrash reportCrashInstance)
+		{
+			var loggerName = exception?.Data[Constants.LoggerToBeUsed] as string;
+			if (!string.IsNullOrEmpty(loggerName))
+			{
+				var logger = LogManager.GetLogger(loggerName);
+				logger.Error(exception);
+			}
+			else
+			{
+				Logger.Error(exception);
+			}
+
+			reportCrashInstance.Send(exception);
 		}
 	}
 }

@@ -49,7 +49,7 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 			var vendors = new List<DeliveryClubVendor>();
 			do
 			{
-				Logger.Debug($"Attempting to acquire closest vendor points info, lng:{request.Longitude}, lat: {request.Latitude}, taking {take}, skipping {skip}");
+				Logger.Trace($"Attempting to acquire closest vendor points info, lng:{request.Longitude}, lat: {request.Latitude}, taking {take}, skipping {skip}");
 				var vendorsResp = await _client.GetDeliveryClubVendorsNearby(request.Longitude, request.Latitude, cancellationToken, skip, take);
 				Logger.Trace($"Acquired data {vendorsResp.PagedList}.");
 				vendors.AddRange(vendorsResp.PagedList.Vendors);
@@ -57,7 +57,7 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 				hasMore = vendorsResp.PagedList.HasMore;
 			}
 			while (hasMore);
-
+			Logger.Trace($"Acquired total of {vendors.Count} vendor points from delivery-club api.");
 			var mapped = vendors.Select(_mapper.Map<VendorInfo>)
 				.ToArray();
 			return new ClosestVendorPointsGetResponse(mapped);

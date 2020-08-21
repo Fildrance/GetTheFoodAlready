@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,19 +35,45 @@ namespace GetTheFoodAlready.Handlers.Behaviours
 			var key = typeof(IRequestHandler<TRequest, TResponse>);
 			var handlerType = _handlerInterfaceToImplementationTypeCache.GetCachedOrFromConfiguration(key);
 
+			IDisposable scope = null;
 			if (Session.Instance != null)
 			{
-				MappedDiagnosticsLogicalContext.Set("RootSessionId", Session.Instance.RootId);
-				MappedDiagnosticsLogicalContext.Set("SessionId", Session.Instance.Id);
+				var loggingContext = new List<KeyValuePair<string, object>>{
+					new KeyValuePair<string, object>("RootSessionId", Session.Instance.RootId),
+					new KeyValuePair<string, object>("SessionId", Session.Instance.Id)
+				};
+				scope = MappedDiagnosticsLogicalContext.SetScoped(loggingContext);
 			}
 
 			var logger = LogManager.GetLogger(handlerType.FullName);
 
 			//todo: add logging of request and response data.
 			logger.Debug($"START {typeof(TRequest).Name}");
-			var response = await next();
-			logger.Debug($"END {typeof(TResponse).Name}");
+			TResponse response = default(TResponse);
+			try
+			{
+				response = await next();
+			}
+			catch (Exception ex)
+			{
+				var o = ex.Data["wasIntercepted"] as bool?;
+				if (o != true)
+				{
+					ex.Data["wasIntercepted"] = true;
+					ex.Data[Constants.LoggerToBeUsed] = logger.Name;
 
+					logger.Debug($"END {typeof(TResponse).Name} WITH FAILURE");
+					// in async enviroment it is important to get real source of problem - ExceptionDispatchInfo will help getting stack trace with methods called.
+					ExceptionDispatchInfo.Capture(ex)
+						.Throw();
+				}
+
+				throw;
+			}
+
+			logger.Debug($"END {typeof(TResponse).Name} WITH SUCCESS");
+
+			scope?.Dispose();
 			return response;
 		}
 		#endregion
