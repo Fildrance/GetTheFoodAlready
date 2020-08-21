@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using GetTheFoodAlready.Ui.Wpf.Support;
@@ -10,15 +11,6 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 	public class SetupVendorPointBasicPreferencesViewModel : ReactiveObject
 	{
 		#region [Static methods]
-		private static IReadOnlyCollection<string> GetAllIfNoneSelected(IList<SelectBoxItem<string>> selection, IList<SelectBoxItem<string>> fullCollection)
-		{
-			var finalSelection = selection == null || 0 == selection.Count
-				? fullCollection
-				: selection;
-
-			return finalSelection.Select(x => x.Value)
-				.ToArray();
-		}
 		#endregion
 
 		#region [Fields]
@@ -122,12 +114,18 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#region [Public methods]
 		public IReadOnlyCollection<string> GetSelectedCuisines()
 		{
-			return GetAllIfNoneSelected(SelectedCuisines, AvailableCuisines);
+			return SelectedCuisines == null
+				? Array.Empty<string>()
+				: SelectedCuisines.Select(x => x.Text)
+					.ToArray();
 		}
 
 		public IReadOnlyCollection<string> GetSelectedPaymentTypes()
 		{
-			return GetAllIfNoneSelected(SelectedPaymentTypes, AvailablePaymentTypes);
+			return SelectedPaymentTypes == null
+				? Array.Empty<string>()
+				: SelectedPaymentTypes.Select(x => x.Value)
+					.ToArray();
 		}
 		#endregion
 		#endregion

@@ -25,9 +25,9 @@ namespace GetTheFoodAlready.Handlers.Orchestration
 
 		#region [Static methods]
 		// todo: move filtering... cannot be placed in orchestration, its different level.
-		private static IEnumerable<VendorInfo> FilterVendors(RandomFoodPropositionsRequest request, ClosestVendorPointsGetResponse response)
+		private static IEnumerable<VendorInfo> FilterVendors(RandomFoodPropositionsRequest request, IEnumerable<VendorInfo> fullVendorsList)
 		{
-			var filtered = response.Vendors.Where(x => !request.AcceptableCuisineTypes.Except(x.Cuisines).Any())
+			var filtered = fullVendorsList.Where(x => !request.AcceptableCuisineTypes.Except(x.Cuisines).Any())
 				.Where(x => !request.AcceptablePaymentTypes.Except(x.AvailablePaymentTypes).Any());
 			if (request.AcceptableDeliveryTimeTil.HasValue)
 			{
@@ -40,7 +40,11 @@ namespace GetTheFoodAlready.Handlers.Orchestration
 					// accepts last number in time string of vendor as proposed delivery time (always consider worst outcome).
 					var possbleTimeString = x.DeliveryTime
 						.Split(Separators, StringSplitOptions.RemoveEmptyEntries)
-						.Last(s => Regex.IsMatch(s, @"(?<s>\d*)"));
+						.LastOrDefault(s => Regex.IsMatch(s, @"\d"));
+					if (possbleTimeString == null)
+					{
+						return true;
+					}
 					var possibleTime = int.Parse(possbleTimeString);
 					return request.AcceptableDeliveryTimeTil < possibleTime;
 				});
@@ -87,11 +91,12 @@ namespace GetTheFoodAlready.Handlers.Orchestration
 			};
 			var closestVendorPointsResponse = await _deliveryClubService.GetClosestVendorPoints(getClosestVendorPointsRequest, cancellationToken);
 
-			var filtered = FilterVendors(request, closestVendorPointsResponse);
+			var filtered = FilterVendors(request, closestVendorPointsResponse.Vendors)
+				.ToArray();
 
 			var foodInfoResponses = filtered.Select(x => _deliveryClubService.GetFoodInfo(new FoodInfoGetRequest(x.Id, request.FoodCategoryExceptions), cancellationToken));
 			var foodInfos = await Task.WhenAll(foodInfoResponses);
-
+			Console.WriteLine(foodInfos.Length);
 
 			return new RandomFoodPropositionsResponse();
 		}
