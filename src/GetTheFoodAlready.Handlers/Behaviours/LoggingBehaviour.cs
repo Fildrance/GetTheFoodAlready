@@ -18,6 +18,10 @@ namespace GetTheFoodAlready.Handlers.Behaviours
 	/// </summary>
 	public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 	{
+		#region  [Constants]
+		private const string WasInterceptedFlagName = "wasIntercepted";
+		#endregion
+
 		#region [Fields]
 		private readonly HandlerTypeToImplementationCache _handlerInterfaceToImplementationTypeCache;
 		#endregion
@@ -56,10 +60,10 @@ namespace GetTheFoodAlready.Handlers.Behaviours
 			}
 			catch (Exception ex)
 			{
-				var o = ex.Data["wasIntercepted"] as bool?;
+				var o = ex.Data[WasInterceptedFlagName] as bool?;
 				if (o != true)
 				{
-					ex.Data["wasIntercepted"] = true;
+					ex.Data[WasInterceptedFlagName] = true;
 					ex.Data[Constants.LoggerToBeUsed] = logger.Name;
 
 					logger.Debug($"END {typeof(TResponse).Name} WITH FAILURE");
