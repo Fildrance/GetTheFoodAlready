@@ -7,7 +7,9 @@
   </sectionGroup>
  </configSections>
  <appSettings>
-		<add key="dadataApiKey" value="9ef80ca72272b01016db7d5c385bae8518b8deaf" />
+		<add key="dadataApiKey" value="your dadata key" />
+	 <!-- google api key have to get goecode and javascript map API enabled (and most likely billing, becauese google does let you use free services only after you confirm you payment info).-->
+		<add key="googleApiKey" value="your google api key"/>
 	</appSettings>
 	<startup>
 		<supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
