@@ -53,8 +53,7 @@ namespace GetTheFoodAlready.Handlers.Registration
 				// auto-mapper
 				Component.For<Profile>().ImplementedBy<MappingProfile>().LifestyleSingleton(),
 				Component.For<IMapper>().ImplementedBy<Mapper>().LifestyleSingleton(),
-				Component.For<IConfigurationProvider>().UsingFactoryMethod(x =>
-				{
+				Component.For<IConfigurationProvider>().UsingFactoryMethod(x => {
 					var profiles = x.ResolveAll<Profile>();
 					return new MapperConfiguration(c => c.AddProfiles(profiles));
 				}),

@@ -29,7 +29,7 @@ namespace GetTheFoodAlready.Api.FoodAgregators.Responses
 
 		public string RatingScore { get; set; }
 		public int? ReviewCount { get; set; }
-		public int? Score { get; set; }
+		public decimal? Score { get; set; }
 		public int? ScoreCount { get; set; }
 		public string DeliveryTime { get; set; }
 		public bool IsDeliveringForFree { get; set; }
