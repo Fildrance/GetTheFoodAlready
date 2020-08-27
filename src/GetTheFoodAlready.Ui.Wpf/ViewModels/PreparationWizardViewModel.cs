@@ -4,8 +4,6 @@ using System.Reactive.Linq;
 
 using GetTheFoodAlready.Api.Orchestration.Requests;
 
-using NLog;
-
 using ReactiveUI;
 
 namespace GetTheFoodAlready.Ui.Wpf.ViewModels
@@ -25,6 +23,9 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			SetupFoodPreferencesViewModel = setupFoodPreferencesViewModel ?? throw new ArgumentNullException(nameof(setupFoodPreferencesViewModel));
 
 			FinishCommand = ReactiveCommand.Create(() => {
+
+				SetupLocationViewModel.SaveSelected();
+
 				var acceptableDeliveryTil = SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil == null
 					? null
 					: (int?) SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil.Value;
