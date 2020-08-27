@@ -11,11 +11,17 @@ using GetTheFoodAlready.DeliveryClubBridge;
 
 using MediatR;
 
+using NLog;
+
 namespace GetTheFoodAlready.Handlers.FoodAgregators
 {
 	/// <summary> Handles getting food information of certain vendor point. </summary>
 	public class FoodInfoGetHandler : IRequestHandler<FoodInfoGetRequest, FoodInfoGetResponse>
 	{
+		#region [Static fields]
+		private static readonly ILogger Logger = LogManager.GetLogger(typeof(FoodInfoGetHandler).FullName);
+		#endregion
+
 		#region [Fields]
 		private readonly IDeliveryClubClient _client;
 		private readonly IMapper _mapper;
@@ -36,12 +42,12 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 		public async Task<FoodInfoGetResponse> Handle(FoodInfoGetRequest request, CancellationToken cancellationToken)
 		{
 			var foodInfoResponse = await _client.GetFoodInfo(request.Id, cancellationToken);
-
+			Logger.Trace($"Acquired {foodInfoResponse.Menu.Count} menu items and {foodInfoResponse.Products.Count} products.");
 			var result = foodInfoResponse.Products
 				.Select(x => {
 					var menuCategories = foodInfoResponse.Menu;
 					var id = x.Id.Primary;
-					var belongsToMenuCategory = menuCategories.Single(c => c.ProductIds.Contains(id));
+					var belongsToMenuCategory = menuCategories.FirstOrDefault(c => c.ProductIds.Contains(id));
 					
 					return new
 					{
@@ -49,12 +55,26 @@ namespace GetTheFoodAlready.Handlers.FoodAgregators
 						Category = belongsToMenuCategory
 					};
 				}).Where(x => {
-					return request.AcceptedCategories.Any(ac => ac.Contains(x.Category.Name));
+					if (x.Category == null)
+					{
+						return true;
+					}
+					return !request.AcceptedCategories.Any(ac => ac.Contains(x.Category.Name));
 				}).Select(x => {
 					var mapped = _mapper.Map<FoodInfo>(x.Item);
-					mapped.CategoryName = x.Category.Name;
+					mapped.CategoryName = x.Category?.Name;
 					return mapped;
 				}).ToArray();
+
+			Logger.Debug(() =>
+			{
+				var message = $"Acquired {result.Length} food items for vendor with id '{request.Id}'";
+				if (request.AcceptedCategories.Count > 0)
+				{
+					message = message + $", while excepting food with category {string.Join(",", request.AcceptedCategories)}";
+				} 
+				return message + ".";
+			});
 
 			return new FoodInfoGetResponse(result);
 		}

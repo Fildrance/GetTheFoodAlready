@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		mc:Ignorable="d"
         Closed="MainWindow_OnClosed"
-        Title="MainWindow" Height="900" Width="1600">
+        Title="MainWindow" Height="950" Width="1600">
 	<Window.Resources>
 		<ResourceDictionary Source="Views/VisualComponentsDictionary.xaml"></ResourceDictionary>
 	</Window.Resources>

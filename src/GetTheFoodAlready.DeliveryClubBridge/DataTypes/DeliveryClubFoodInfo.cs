@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using Newtonsoft.Json;
+
 namespace GetTheFoodAlready.DeliveryClubBridge.DataTypes
 {
 	public class DeliveryClubFoodInfo
@@ -35,7 +37,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge.DataTypes
 	public class ItemProperties
 	{
 		/// <summary> Item volume in milliliters.</summary>
-		public int Volume { get; set; }
+		public int? Volume { get; set; }
 		/// <summary> Item weight in gramms. </summary>
 		public string Weight { get; set; }
 	}
@@ -47,6 +49,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge.DataTypes
 		public Images Images { get; set; }
 		public string Name { get; set; }
 		public ItemPrice Price { get; set; }
+		[JsonProperty("properties")]
 		public ItemProperties ItemProperties { get; set; }
 	}
 }

@@ -44,6 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -56,10 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoLoginningDeliveryClubClient.cs" />
+    <Compile Include="AutoRetryingDeliveryClubClient.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataTypes\DeliveryClubVendor.cs" />
     <Compile Include="DataTypes\DeliveryClubFoodInfo.cs" />
     <Compile Include="DeliveryClubClient.cs" />
+    <Compile Include="DeliveryClubExpectedTimeParser.cs" />
     <Compile Include="IDeliveryClubClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

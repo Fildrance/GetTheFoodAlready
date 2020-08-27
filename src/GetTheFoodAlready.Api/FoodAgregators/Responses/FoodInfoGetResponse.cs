@@ -20,6 +20,10 @@ namespace GetTheFoodAlready.Api.FoodAgregators.Responses
 
 	public class FoodInfo
 	{
+		public string ProductName { get; set; }
 		public string CategoryName { get; set; }
+		public string Description { get; set; }
+		public string Price { get; set; }
+		public string Volume { get; set; }
 	}
 }

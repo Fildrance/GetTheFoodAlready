@@ -14,9 +14,10 @@ namespace GetTheFoodAlready.Handlers.MappingProfiles
 		public MappingProfile()
 		{
 			CreateMap<DeliveryClubVendor, VendorInfo>()
-				.ForMember(x => x.Id, opts => opts.MapFrom(src => src.Chain.Id.Primary))
+				.ForMember(x => x.Id, opts => opts.MapFrom(src => src.Id.Primary))
 				.ForMember(x => x.VendorAlias, opts => opts.MapFrom(src => src.Chain.Alias))
 				.ForMember(x => x.VendorPointAlias, opts => opts.MapFrom(src => src.Alias))
+				.ForMember(x => x.DisplayName, opts => opts.MapFrom(src => src.Name))
 				.ForMember(x => x.AvailablePaymentTypes, opts => opts.MapFrom(src => src.Payments.Select(x => x.Type)))
 				.ForMember(x => x.DeliveryPrice, opts => opts.MapFrom(src => src.Delivery.Price.Value))
 				.ForMember(x => x.MinOrderTotal, opts => opts.MapFrom(src => src.Delivery.MinOrderPrice.Value))
@@ -27,7 +28,10 @@ namespace GetTheFoodAlready.Handlers.MappingProfiles
 				.ForMember(x => x.DeliveryTime, opts => opts.MapFrom(src => src.Delivery.Time))
 				.ForMember(x => x.IsDeliveringForFree, opts => opts.MapFrom(src => src.Labels.Any(label => label == DeliveryClubConstants.FreeDeliveryLabel)));
 
-			CreateMap<MenuItem, FoodInfo>();
+			CreateMap<MenuItem, FoodInfo>()
+				.ForMember(x => x.ProductName, opts => opts.MapFrom(src => src.Name))
+				.ForMember(x => x.Price, opts => opts.MapFrom(src => src.Price.Value))
+				.ForMember(x => x.Volume, opts => opts.MapFrom((src, mapped) => src.ItemProperties?.Volume?.ToString() ?? src.ItemProperties?.Weight));
 		}
 	}
 }

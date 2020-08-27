@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,8 +21,8 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 	public class DeliveryClubClient : IDeliveryClubClient
 	{
 		#region  [Constants]
-		private const string DeliveryApiBaseUrl = "https://api.delivery-club.ru";
-		private const string DeliveryApiVersion = "api1.2";
+		protected const string DeliveryApiBaseUrl = "https://api.delivery-club.ru";
+		protected const string DeliveryApiVersion = "api1.2";
 		#endregion
 
 		#region [Static fields]
@@ -31,7 +30,8 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 		#endregion
 
 		#region [Fields]
-		private readonly HttpClient _httpClient;
+		protected readonly HttpClient HttpClient;
+		protected readonly CookieContainer CookieContainer = new CookieContainer();
 		#endregion
 
 		#region [c-tor]
@@ -39,18 +39,18 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 		{
 			var nestedHandler = new HttpClientHandler
 			{
-				CookieContainer = new CookieContainer(),
+				CookieContainer = CookieContainer,
 				UseCookies = true
 			};
 			Logger.Trace("Asking for HttpMessageHandler from provider factory method.");
 			var handlerToBeUsed = provider(nestedHandler);
 			Logger.Trace($"Got '{handlerToBeUsed.GetType().Name}' as top level HttpMessageHandler from provider.");
-			_httpClient = new HttpClient(handlerToBeUsed);
+			HttpClient = new HttpClient(handlerToBeUsed);
 		}
 		#endregion
 
 		#region IDeliveryClubClient implementation
-		public async Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(
+		public virtual async Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(
 			string longitude,
 			string latitude,
 			CancellationToken cancellationToken = default(CancellationToken),
@@ -58,17 +58,11 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 			int take = 200
 		)
 		{
-			Logger.Debug("Getting cookies to work with delivery-club api.");
-			// get session to operate further
-			var sessionGetResult = await _httpClient.PostAsync($"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/user/login", new StringContent(""), cancellationToken);
-			Logger.Trace(() => $"Api login result is :\r\n {sessionGetResult}");
-			sessionGetResult.EnsureSuccessStatusCode();
-
 			Logger.Debug("Getting list of closest delivery club vendors from delivery-club api.");
 			var url = $"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/vendors?limit={take}&offset={skip}"
 			          + $"&latitude={latitude}&longitude={longitude}";
 			Logger.Trace($"Url for request is '{url}'. \r\n Attempting to get list of vendor points.");
-			var requestResult = await _httpClient.GetAsync(url, cancellationToken);
+			var requestResult = await HttpClient.GetAsync(url, cancellationToken);
 			Logger.Trace(() => $"Get closest vendors result :\r\n {requestResult}");
 			requestResult.EnsureSuccessStatusCode();
 			Logger.Trace("Reading response content.");
@@ -78,11 +72,20 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 			return vendorsResp;
 		}
 
-		public Task<DeliveryClubFoodInfo> GetFoodInfo(int vendorPointId, CancellationToken cancellationToken)
+		public virtual async Task<DeliveryClubFoodInfo> GetFoodInfo(int vendorPointId, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			Logger.Debug("Getting list of food items from delivery-club api.");
+			var url = $"{DeliveryApiBaseUrl}/{DeliveryApiVersion}/vendor/{vendorPointId}/menu?data=menu,products,actions";
+
+			var requestResult = await HttpClient.GetAsync(url, cancellationToken);
+			Logger.Trace(() => $"Get menu for vendor with id '{vendorPointId}', got '{requestResult}'");
+			requestResult.EnsureSuccessStatusCode();
+			Logger.Trace("Reading response content.");
+			var requestContent = await requestResult.Content.ReadAsStringAsync();
+
+			var records = JsonConvert.DeserializeObject<DeliveryClubFoodInfo>(requestContent);
+			return records;
 		}
 		#endregion
-
 	}
 }

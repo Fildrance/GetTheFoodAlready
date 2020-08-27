@@ -3,12 +3,61 @@
                     xmlns:vm="clr-namespace:GetTheFoodAlready.Ui.Wpf.ViewModels"
                     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
                     xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
-                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                    >
 
 	<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
-
+	
 	<DataTemplate DataType="{x:Type vm:FoodsListViewModel}">
-		<TextBlock> haHHa</TextBlock>
+		<DataTemplate.Resources>
+			<Style TargetType="Button">
+				<Setter Property="Margin" Value="5"/>
+			</Style>
+		</DataTemplate.Resources>
+		<StackPanel>
+			
+			<Label>Vendor</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.DisplayName}"></TextBox>
+
+			<Label>Delivery price</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryPrice}"></TextBox>
+
+			<Label>Delivery time</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryTime}"></TextBox>
+
+			<Label>Is delivery free?</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.IsDeliveringForFree}"></TextBox>
+
+			<Label>Score</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.Score}"></TextBox>
+
+			<Label>Minimum order</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.MinOrderTotal}"></TextBox>
+
+			<DataGrid ItemsSource="{Binding FoodItems}" Height="500" IsReadOnly="True" AutoGenerateColumns="False">
+				<DataGrid.Columns>
+					<DataGridTextColumn Width="2*" Binding="{Binding ProductName}" Header="Name" />
+					<DataGridTextColumn Width="6*" Binding="{Binding Description}" Header="Description" />
+					<DataGridTextColumn Width="*" Binding="{Binding Price}" Header="Price" />
+					<DataGridTextColumn Width="*" Binding="{Binding Volume}" Header="Volume" />
+				</DataGrid.Columns>
+			</DataGrid>
+
+			<Grid Height="80">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition></ColumnDefinition>
+					<ColumnDefinition></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition ></RowDefinition>
+					<RowDefinition></RowDefinition>
+				</Grid.RowDefinitions>
+				<Button Content="REROLL!" Command="{Binding GetRandomFoodCommand}" Grid.Column="1" Grid.Row="0" />
+				<Button Content="Switch list" Command="{Binding SwitchFoodList}" Grid.Column="0" Grid.Row="0"/>
+				<Button Content="GO TO VENDOR PAGE" Command="{Binding GoToVendorPage}" Grid.Column="0" Grid.Row="1"></Button>
+			</Grid>
+
+		</StackPanel>
 	</DataTemplate>
 
 	<DataTemplate DataType="{x:Type vm:PreparationWizardViewModel}" x:Name="WizardTemplate">

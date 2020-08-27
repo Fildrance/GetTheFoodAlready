@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 
 using ReactiveUI;
 
@@ -22,7 +21,10 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 
 			CurrentViewModel = preparationWizardViewModel;
 
-			_wizardViewModel.FinishObservable.Subscribe(x => CurrentViewModel = _foodsListViewModel);
+			_wizardViewModel.FinishObservable.Subscribe(x => {
+				CurrentViewModel = _foodsListViewModel;
+				_foodsListViewModel.FilterInfo = x;
+			});
 		}
 		#endregion
 

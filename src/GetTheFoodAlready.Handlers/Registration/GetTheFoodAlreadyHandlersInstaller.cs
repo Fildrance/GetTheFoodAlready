@@ -63,10 +63,12 @@ namespace GetTheFoodAlready.Handlers.Registration
 
 				Component.For<HttpClientHandlerProvider>().Instance(nested => new LoggingHttpHandler(nested)),
 				
-				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),
+				// todo: try to replace with decorators.
+				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClient>().LifestyleSingleton(),
 				Component.For<IDaDataClient>().ImplementedBy<DaDataClient>().LifestyleSingleton()
 					.DependsOn(Dependency.OnValue("token", dadataApiKey)),
-				Component.For<HandlerTypeToImplementationCache>().ImplementedBy<HandlerTypeToImplementationCache>().LifestyleSingleton()
+				Component.For<HandlerTypeToImplementationCache>().ImplementedBy<HandlerTypeToImplementationCache>().LifestyleSingleton(),
+				Component.For<DeliveryClubExpectedTimeParser>().ImplementedBy<DeliveryClubExpectedTimeParser>().LifestyleSingleton()
 			);
 
 			if (_useSession)

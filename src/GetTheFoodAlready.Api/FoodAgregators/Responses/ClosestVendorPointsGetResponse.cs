@@ -22,6 +22,7 @@ namespace GetTheFoodAlready.Api.FoodAgregators.Responses
 		public int Id { get; set; }
 		public string VendorAlias { get; set; }
 		public string VendorPointAlias { get; set; }
+		public string DisplayName { get; set; }
 		public IReadOnlyCollection<string> Cuisines { get; set; }
 		public IReadOnlyCollection<string> AvailablePaymentTypes { get; set; }
 		public int? MinOrderTotal { get; set; }

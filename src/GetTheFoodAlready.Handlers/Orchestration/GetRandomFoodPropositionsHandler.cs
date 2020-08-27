@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,13 +18,89 @@ namespace GetTheFoodAlready.Handlers.Orchestration
 	/// <summary> Orchestrates getting food info and forming random propositions. </summary>
 	public class GetRandomFoodPropositionsHandler : IRequestHandler<RandomFoodPropositionsRequest, RandomFoodPropositionsResponse>
 	{
-		#region [Static fields]
-		private static readonly char[] Separators = {' ', '-'};
+		#region  [Constants]
+		//todo: replace with injection
+		private const int MaxRerollAttempts = 5;
 		#endregion
 
-		#region [Static methods]
+		#region [Fields]
+		private readonly IDeliveryClubService _deliveryClubService;
+		private readonly DeliveryClubExpectedTimeParser _parser;
+		private readonly Random _randomGenerator = new Random();
+		#endregion
+
+		#region [c-tor]
+		public GetRandomFoodPropositionsHandler(
+			IDeliveryClubService deliveryClubService, 
+			DeliveryClubExpectedTimeParser parser
+		)
+		{
+			_deliveryClubService = deliveryClubService ?? throw new ArgumentNullException(nameof(deliveryClubService));
+			_parser = parser ?? throw new ArgumentNullException(nameof(deliveryClubService));
+		}
+		#endregion
+
+		#region IRequestHandler<RandomFoodPropositionsRequest,RandomFoodPropositionsResponse> implementation
+		public async Task<RandomFoodPropositionsResponse> Handle(RandomFoodPropositionsRequest request, CancellationToken cancellationToken)
+		{
+			var addressInfo = request.AddressInfo;
+			var closestVendorPointsRequest = new ClosestVendorPointsGetRequest
+			{
+				Latitude = addressInfo.Latitude,
+				Longitude = addressInfo.Longitude 
+			};
+			var closestVendorPointsResponse = await _deliveryClubService.GetClosestVendorPoints(closestVendorPointsRequest, cancellationToken);
+
+			var filtered = FilterVendors(request, closestVendorPointsResponse.Vendors)
+				.ToList();
+
+			int rerollAttempts = 0;
+			FoodInfoGetResponse foodInfoResponse;
+			VendorInfo selectedVendor = null;
+			bool needReroll;
+			do
+			{
+				if (selectedVendor != null)
+				{
+					filtered.Remove(selectedVendor);
+					rerollAttempts++;
+				}
+				var indexOfRandomElement = _randomGenerator.Next(filtered.Count);
+				selectedVendor = filtered[indexOfRandomElement];
+
+				var foodRequest = new FoodInfoGetRequest(selectedVendor.Id, request.FoodCategoryExceptions);
+				foodInfoResponse = await _deliveryClubService.GetFoodInfo(foodRequest, cancellationToken);
+
+				var foodItemsCount = foodInfoResponse.FoodInfos.Count;
+				// if no items found - need reroll
+				needReroll = foodItemsCount == 0;
+				if (needReroll)
+				{
+					// if reroll required - check if reroll attempts are available
+					needReroll = rerollAttempts < MaxRerollAttempts;
+				}
+			}
+			while (needReroll);
+
+			if (foodInfoResponse.FoodInfos.Count == 0)
+			{
+				throw new InvalidOperationException($"Failed to get proper food info for random vendor! Attempted to get from {rerollAttempts} vendors, all returned empty data set.");
+			}
+
+			var proposedFood = SelectRandomFood(foodInfoResponse.FoodInfos);
+
+			return new RandomFoodPropositionsResponse(
+				foodInfoResponse.FoodInfos,
+				proposedFood,
+				selectedVendor
+			);
+		}
+		#endregion
+
+		#region [Private]
+		#region [Private methods]
 		// todo: move filtering... cannot be placed in orchestration, its different level.
-		private static IEnumerable<VendorInfo> FilterVendors(RandomFoodPropositionsRequest request, IEnumerable<VendorInfo> fullVendorsList)
+		private IEnumerable<VendorInfo> FilterVendors(RandomFoodPropositionsRequest request, IEnumerable<VendorInfo> fullVendorsList)
 		{
 			var filtered = fullVendorsList.Where(x => !request.AcceptableCuisineTypes.Except(x.Cuisines).Any())
 				.Where(x => !request.AcceptablePaymentTypes.Except(x.AvailablePaymentTypes).Any());
@@ -38,15 +113,8 @@ namespace GetTheFoodAlready.Handlers.Orchestration
 					}
 
 					// accepts last number in time string of vendor as proposed delivery time (always consider worst outcome).
-					var possbleTimeString = x.DeliveryTime
-						.Split(Separators, StringSplitOptions.RemoveEmptyEntries)
-						.LastOrDefault(s => Regex.IsMatch(s, @"\d"));
-					if (possbleTimeString == null)
-					{
-						return true;
-					}
-					var possibleTime = int.Parse(possbleTimeString);
-					return request.AcceptableDeliveryTimeTil < possibleTime;
+					var possibleTime = _parser.GetPessimisticDeliveryTime(x.DeliveryTime);
+					return request.AcceptableDeliveryTimeTil >= possibleTime;
 				});
 			}
 
@@ -67,39 +135,23 @@ namespace GetTheFoodAlready.Handlers.Orchestration
 
 			return filtered;
 		}
-		#endregion
 
-		#region [Fields]
-		private readonly IDeliveryClubService _deliveryClubService;
-		#endregion
-
-		#region [c-tor]
-		public GetRandomFoodPropositionsHandler(IDeliveryClubService deliveryClubService)
+		private IReadOnlyCollection<FoodInfo> SelectRandomFood(IReadOnlyCollection<FoodInfo> foodInfos)
 		{
-			_deliveryClubService = deliveryClubService ?? throw new ArgumentNullException(nameof(deliveryClubService));
-		}
-		#endregion
-
-		#region IRequestHandler<RandomFoodPropositionsRequest,RandomFoodPropositionsResponse> implementation
-		public async Task<RandomFoodPropositionsResponse> Handle(RandomFoodPropositionsRequest request, CancellationToken cancellationToken)
-		{
-			var addressInfo = request.AddressInfo;
-			var getClosestVendorPointsRequest = new ClosestVendorPointsGetRequest
+			var totalCount = foodInfos.Count;
+			IList<FoodInfo> randomFoodList = new List<FoodInfo>();
+			var maxFood = 4;
+			do
 			{
-				Latitude = addressInfo.Latitude,
-				Longitude = addressInfo.Longitude 
-			};
-			var closestVendorPointsResponse = await _deliveryClubService.GetClosestVendorPoints(getClosestVendorPointsRequest, cancellationToken);
+				var randomIndex = _randomGenerator.Next(totalCount);
+				var randomFood = foodInfos.ElementAt(randomIndex);
+				randomFoodList.Add(randomFood);
+			}
+			while (randomFoodList.Count < maxFood);
 
-			var filtered = FilterVendors(request, closestVendorPointsResponse.Vendors)
-				.ToArray();
-
-			var foodInfoResponses = filtered.Select(x => _deliveryClubService.GetFoodInfo(new FoodInfoGetRequest(x.Id, request.FoodCategoryExceptions), cancellationToken));
-			var foodInfos = await Task.WhenAll(foodInfoResponses);
-			Console.WriteLine(foodInfos.Length);
-
-			return new RandomFoodPropositionsResponse();
+			return randomFoodList.ToArray();
 		}
+		#endregion
 		#endregion
 	}
 }
