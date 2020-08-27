@@ -41,7 +41,7 @@ namespace GetTheFoodAlready.Api.Support
 				if (response.Content != null)
 				{
 					var contentMessage = await response.Content.ReadAsStringAsync();
-					responseMessage = responseMessage + "\r\n Request data: \r\n " + contentMessage;
+					responseMessage = responseMessage + "\r\n Response data: \r\n " + contentMessage;
 				}
 				Logger.Trace(responseMessage);
 			}
