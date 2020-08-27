@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+	<configSections>
+  <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
+   <section name="GetTheFoodAlready.Ui.Wpf.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+  </sectionGroup>
+ </configSections>
+ <appSettings>
+		<add key="dadataApiKey" value="your dadata key" />
+	 <!-- google api key have to get goecode and javascript map API enabled (and most likely billing, becauese google does let you use free services only after you confirm you payment info).-->
+		<add key="googleApiKey" value="your google api key"/>
+	</appSettings>
+	<startup>
+		<supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
+	</startup>
+ <userSettings>
+  <GetTheFoodAlready.Ui.Wpf.Properties.Settings>
+   <setting name="DefaultUserLocationAddress" serializeAs="String">
+    <value />
+   </setting>
+  </GetTheFoodAlready.Ui.Wpf.Properties.Settings>
+ </userSettings>
+</configuration>

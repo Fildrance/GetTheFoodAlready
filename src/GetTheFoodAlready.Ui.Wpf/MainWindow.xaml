@@ -1,0 +1,28 @@
+﻿<Window x:Class="GetTheFoodAlready.Ui.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d"
+        Closed="MainWindow_OnClosed"
+        Title="MainWindow" Height="950" Width="1600">
+	<Window.Resources>
+		<ResourceDictionary Source="Views/VisualComponentsDictionary.xaml"></ResourceDictionary>
+	</Window.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<ContentPresenter Content="{Binding CurrentViewModel}"></ContentPresenter>
+
+		<StatusBar Grid.Row="1">
+			<ProgressBar HorizontalAlignment="Right"
+			             IsIndeterminate="{Binding Browser.IsLoading}"
+			             Width="100"
+			             Height="16"
+			             Margin="3" />
+			<Separator />
+		</StatusBar>
+	</Grid>
+</Window>

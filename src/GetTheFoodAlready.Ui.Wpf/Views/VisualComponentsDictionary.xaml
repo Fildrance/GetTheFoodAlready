@@ -1,0 +1,202 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:GetTheFoodAlready.Ui.Wpf.ViewModels"
+                    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                    >
+
+	<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+	
+	<DataTemplate DataType="{x:Type vm:FoodsListViewModel}">
+		<DataTemplate.Resources>
+			<Style TargetType="Button">
+				<Setter Property="Margin" Value="5"/>
+			</Style>
+		</DataTemplate.Resources>
+		<StackPanel>
+			
+			<Label>Vendor</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.DisplayName}"></TextBox>
+
+			<Label>Delivery price</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryPrice}"></TextBox>
+
+			<Label>Delivery time</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryTime}"></TextBox>
+
+			<Label>Is delivery free?</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.IsDeliveringForFree}"></TextBox>
+
+			<Label>Score</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.Score}"></TextBox>
+
+			<Label>Minimum order</Label>
+			<TextBox IsReadOnly="True" Text="{Binding Vendor.MinOrderTotal}"></TextBox>
+
+			<DataGrid ItemsSource="{Binding FoodItems}" Height="500" IsReadOnly="True" AutoGenerateColumns="False">
+				<DataGrid.Columns>
+					<DataGridTextColumn Width="2*" Binding="{Binding ProductName}" Header="Name" />
+					<DataGridTextColumn Width="6*" Binding="{Binding Description}" Header="Description" />
+					<DataGridTextColumn Width="*" Binding="{Binding Price}" Header="Price" />
+					<DataGridTextColumn Width="*" Binding="{Binding Volume}" Header="Volume" />
+				</DataGrid.Columns>
+			</DataGrid>
+
+			<Grid Height="80">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition></ColumnDefinition>
+					<ColumnDefinition></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition ></RowDefinition>
+					<RowDefinition></RowDefinition>
+				</Grid.RowDefinitions>
+				<Button Content="REROLL!" Command="{Binding GetRandomFoodCommand}" Grid.Column="1" Grid.Row="0" />
+				<Button Content="Switch list" Command="{Binding SwitchFoodList}" Grid.Column="0" Grid.Row="0"/>
+				<Button Content="GO TO VENDOR PAGE" Command="{Binding GoToVendorPage}" Grid.Column="0" Grid.Row="1"></Button>
+			</Grid>
+
+		</StackPanel>
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:PreparationWizardViewModel}" x:Name="WizardTemplate">
+		<xctk:Wizard FinishButtonClosesWindow="False">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Finish">
+					<i:InvokeCommandAction Command="{Binding FinishCommand}" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+
+			<xctk:WizardPage x:Name="SetupLocation"
+			                 Title="Choose your location"
+			                 Description="This Wizard will walk you though setting up food randomizer please go through all steps, or click 'Finish' if you already have."
+			                 NextPage="{Binding ElementName=SetupVendorPointPreferences}"
+							 CanSelectNextPage="{Binding SetupLocationViewModel.CanGoNext}"
+			                 NextButtonVisibility="Visible">
+				<xctk:WizardPage.ExteriorPanelContent>
+					<Image Source="../Resources/HUNGRY_DUDE.jpg" />
+				</xctk:WizardPage.ExteriorPanelContent>
+				<ContentPresenter Content="{Binding SetupLocationViewModel}" />
+			</xctk:WizardPage>
+
+			<xctk:WizardPage x:Name="SetupVendorPointPreferences"
+			                 PageType="Interior"
+			                 Title="Choose your vendor point preferences"
+			                 NextPage="{Binding ElementName=SetupFoodPreferences}"
+			                 PreviousPage="{Binding ElementName=Interior}">
+				<ContentPresenter Content="{Binding SetupVendorPointBasicPreferencesViewModel}" />
+			</xctk:WizardPage>
+
+			<xctk:WizardPage x:Name="SetupFoodPreferences" PageType="Interior"
+			                 Title="Choose your food preferences"
+			                 Description="Finish config ."
+			                 PreviousPage="{Binding ElementName=SetupVendorPointPreferences}"
+			                 FinishButtonVisibility="Visible"
+			                 CanFinish="True">
+				<ContentPresenter Content="{Binding SetupFoodPreferencesViewModel}" />
+			</xctk:WizardPage>
+
+		</xctk:Wizard>
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:SetupLocationViewModel}" x:Name="SetupUserLocationTemplate">
+		<Grid HorizontalAlignment="Left" Width="900">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="34" />
+				<RowDefinition Height="34" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<Label Content="Enter your location" Grid.Row="0" />
+			<ComboBox Text="{Binding Location}"
+			          ItemsSource="{Binding LocationPropositions}"
+			          IsDropDownOpen="{Binding IsPropositionsListOpen}"
+			          SelectedValue="{Binding SelectedLocation}"
+			          DisplayMemberPath="AddressName"
+			          IsEditable="True"
+			          Height="30" Width="340" Grid.Row="1" HorizontalAlignment="Left" />
+			<wpf:ChromiumWebBrowser Grid.Row="2" x:Name="CefBrowser"
+			                        WebBrowser="{Binding Browser, Mode=TwoWay}" />
+		</Grid>
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:SetupVendorPointBasicPreferencesViewModel}">
+		<StackPanel Width="600" HorizontalAlignment="Left">
+
+
+			<Label Content="Choose preferred time-range for delivery" />
+			<ComboBox
+				SelectedValue="{Binding SelectedAcceptableDeliveryTimeTil}"
+			          ItemsSource="{Binding AcceptableDeliveryTimes}"
+			          DisplayMemberPath="Text" />
+
+			<Label Content="Choose preferred cuisine types (empty means any allowed)" />
+			<xctk:CheckComboBox x:Name="CuisineSelect"
+			                    DisplayMemberPath="Text"
+			                    ValueMemberPath="Value"
+			                    SelectedItemsOverride="{Binding SelectedCuisines}"
+			                    ItemsSource="{Binding AvailableCuisines}" />
+
+			<Label Content="Choose preferred payment types (empty means any allowed)" />
+			<xctk:CheckComboBox x:Name="PaymentTypeSelect"
+			                    DisplayMemberPath="Text"
+			                    ValueMemberPath="Value"
+			                    SelectedItemsOverride="{Binding SelectedPaymentTypes}"
+			                    ItemsSource="{Binding AvailablePaymentTypes}" />
+
+			<Border Height="40" >
+				<CheckBox IsChecked="{Binding IsOnlyFreeDelivery, Mode=TwoWay}"
+				          Content="Select only out of labeled with 'free delivery'?"
+				          HorizontalContentAlignment="Left" VerticalAlignment="Center" />
+			</Border>
+			<Border Height="40" >
+				<CheckBox IsChecked="{Binding IsMinimumOrderAmountUsed, Mode=TwoWay}"
+				          Content="Check vendors for minimum order amount?"
+				          HorizontalContentAlignment="Left" VerticalAlignment="Center" />
+			</Border>
+			<Label Content="{Binding MinimunOrderAmountLabel}"  Visibility="{Binding IsMinimumOrderAmountUsed, Converter={StaticResource VisibleIfTrueConverter}}"/>
+			<Slider x:Name="MinimumOrderAmountSlider" Visibility="{Binding IsMinimumOrderAmountUsed, Converter={StaticResource VisibleIfTrueConverter}}"
+			        Maximum="5000" Minimum="-1"
+			        Value="{Binding MinimumOrderAmount}"
+			        AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="1"
+			        TickFrequency="100" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" />
+
+			<Border Height="40" >
+				<CheckBox IsChecked="{Binding IsRatingImportant, Mode=TwoWay}"
+				          Content="Is rating of vendor point of importance?"
+				          HorizontalContentAlignment="Left" VerticalAlignment="Center" />
+			</Border>
+
+			<Label Content="{Binding MinimunRatingLabel}" Visibility="{Binding IsRatingImportant, Converter={StaticResource VisibleIfTrueConverter}}"/>
+			<Slider x:Name="MinimumRatingSlider"
+			        Maximum="5" Minimum="0"
+			        Value="{Binding MinimumRaiting}"
+			        Visibility="{Binding IsRatingImportant, Converter={StaticResource VisibleIfTrueConverter}}"
+			        AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="1"
+			        TickFrequency="0.1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" />
+
+			<Label Content="{Binding MinimunRateVoteCountLabel}" Visibility="{Binding IsRatingImportant, Converter={StaticResource VisibleIfTrueConverter}}" />
+			<Slider x:Name="MinimumRateVoteCountSlider"
+			        Maximum="2000" Minimum="0"
+			        Value="{Binding MinimumRateVoteCount}"
+			        Visibility="{Binding IsRatingImportant, Converter={StaticResource VisibleIfTrueConverter}}"
+			        AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0"
+			        TickFrequency="100" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" />
+
+
+
+		</StackPanel>
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:SetupFoodPreferencesViewModel}" >
+		<StackPanel Width="800" HorizontalAlignment="Left">
+			<Label Content="Choose excluded menu parts (empty means any allowed)" />
+			<xctk:CheckComboBox x:Name="PaymentTypeSelect"
+			                    DisplayMemberPath="Text"
+			                    ValueMemberPath="Value"
+			                    SelectedItemsOverride="{Binding SelectedMenuPartsToExclude}"
+			                    ItemsSource="{Binding AvailableToExcludeMenuParts}" />
+		</StackPanel>
+	</DataTemplate>
+
+</ResourceDictionary>
