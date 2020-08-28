@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using GetTheFoodAlready.DeliveryClubBridge.DataTypes;
 
-namespace GetTheFoodAlready.DeliveryClubBridge
+namespace GetTheFoodAlready.DeliveryClubBridge.Client
 {
 	/// <summary>
 	/// Client for interacting with delivery-club api.
@@ -28,5 +28,13 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns>Container with list of menu items and menu categories.</returns>
 		Task<DeliveryClubFoodInfo> GetFoodInfo(int vendorPointId, CancellationToken cancellationToken);
+
+		/// <summary>
+		/// Makes client authorized in api. Login can be made automatic action in one of decorators - see <see cref="AutoLoginningDeliveryClubClientDecorator"/>.
+		/// </summary>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <param name="forceReLogin">If login data is already stored, is clearing it and re-logining required?</param>
+		/// <returns>Token+secret strings, acquired from login.</returns>
+		Task<string> Login(CancellationToken cancellationToken, bool forceReLogin = false);
 	}
 }

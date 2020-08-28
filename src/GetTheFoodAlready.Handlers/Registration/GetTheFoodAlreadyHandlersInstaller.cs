@@ -3,7 +3,6 @@ using System.Configuration;
 
 using AutoMapper;
 
-using Castle.Core.Configuration;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -11,13 +10,12 @@ using Castle.Windsor;
 using GetTheFoodAlready.Api.Support;
 using GetTheFoodAlready.DaDataBridge;
 using GetTheFoodAlready.DeliveryClubBridge;
+using GetTheFoodAlready.DeliveryClubBridge.Client;
 using GetTheFoodAlready.Handlers.Behaviours;
 using GetTheFoodAlready.Handlers.MappingProfiles;
 using GetTheFoodAlready.Handlers.Support;
 
 using MediatR;
-
-using Newtonsoft.Json;
 
 using NLog;
 
@@ -49,6 +47,8 @@ namespace GetTheFoodAlready.Handlers.Registration
 				throw new InvalidOperationException("Attempting to launch application without property 'dadataApiKey' in appSettings! Cannot proceed withou this api key.");
 			}
 
+			var deliveryClubClientSettings = new DeliveryClubClientSettings("https://api.delivery-club.ru", "api1.2");
+
 			container.Register(
 				// auto-mapper
 				Component.For<Profile>().ImplementedBy<MappingProfile>().LifestyleSingleton(),
@@ -63,13 +63,16 @@ namespace GetTheFoodAlready.Handlers.Registration
 
 				Component.For<HttpClientHandlerProvider>().Instance(nested => new LoggingHttpHandler(nested)),
 				
-				// todo: try to replace with decorators.
-				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClient>().LifestyleSingleton(),
+				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClientDecorator>().LifestyleSingleton(),
+				Component.For<IDeliveryClubClient>().ImplementedBy<AutoLoginningDeliveryClubClientDecorator>().LifestyleSingleton(),
+				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),
+
 				Component.For<IDaDataClient>().ImplementedBy<DaDataClient>().LifestyleSingleton()
 					.DependsOn(Dependency.OnValue("token", dadataApiKey)),
 				Component.For<HandlerTypeToImplementationCache>().ImplementedBy<HandlerTypeToImplementationCache>().LifestyleSingleton(),
-				Component.For<DeliveryClubExpectedTimeParser>().ImplementedBy<DeliveryClubExpectedTimeParser>().LifestyleSingleton()
-			);
+				Component.For<DeliveryClubExpectedTimeParser>().ImplementedBy<DeliveryClubExpectedTimeParser>().LifestyleSingleton(),
+				Component.For<DeliveryClubClientSettings>().Instance(deliveryClubClientSettings).LifestyleSingleton()
+			);																						
 
 			if (_useSession)
 			{

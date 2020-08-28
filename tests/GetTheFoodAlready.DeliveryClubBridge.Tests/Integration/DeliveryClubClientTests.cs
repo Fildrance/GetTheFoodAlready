@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using GetTheFoodAlready.Api.Support;
+using GetTheFoodAlready.DeliveryClubBridge.Client;
 
 using NUnit.Framework;
 
@@ -14,15 +15,19 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Integration
 		[SetUp]
 		public void Setup()
 		{
-			_client = new DeliveryClubClient(nested => new LoggingHttpHandler(nested));
+			var deliveryClubClientSettings = new DeliveryClubClientSettings("https://api.delivery-club.ru", "api1.2");
+
+			_client = new DeliveryClubClient(nested => new LoggingHttpHandler(nested), deliveryClubClientSettings);
+			
 		}
 
 		[Test]
-		public void GetDeliveryClubVendorsNearby_PassMoscowCoordinates_DoesntThrow()
+		public async Task GetDeliveryClubVendorsNearby_PassMoscowCoordinates_DoesntThrow()
 		{
 			//arrange
 			var coordinatesLatitude = "55.867051m";
 			var coordinatesLongitude = "37.594261m";
+			await _client.Login(CancellationToken.None);
 			//act
 			//assert
 			Assert.DoesNotThrowAsync(async () => await _client.GetDeliveryClubVendorsNearby(coordinatesLongitude, coordinatesLatitude, CancellationToken.None));
@@ -34,6 +39,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Integration
 			//arrange
 			var coordinatesLatitude = "55.867051m";
 			var coordinatesLongitude = "37.594261m";
+			await _client.Login(CancellationToken.None);
 			//act
 			var result = await _client.GetDeliveryClubVendorsNearby(coordinatesLongitude, coordinatesLatitude, CancellationToken.None);
 			//assert
