@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 using GetTheFoodAlready.DeliveryClubBridge.DataTypes;
@@ -9,23 +10,20 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Client
 {
 	public class AutoRetryingDeliveryClubClientDecorator : IDeliveryClubClient
 	{
-		#region  [Constants]
-		// todo: inject tetry count
-		private const int MaxRetryCount = 15;
-		#endregion
-
 		#region [Static fields]
 		private static readonly ILogger Logger = LogManager.GetLogger(typeof(AutoRetryingDeliveryClubClientDecorator).FullName);
 		#endregion
 
 		#region [Fields]
+		private readonly int _maxRetryCount;
 		private readonly IDeliveryClubClient _nested;
 		#endregion
 
 		#region [c-tor]
-		public AutoRetryingDeliveryClubClientDecorator(IDeliveryClubClient nested)
+		public AutoRetryingDeliveryClubClientDecorator(IDeliveryClubClient nested, int maxRetryCount = 5)
 		{
-			_nested = nested;
+			_nested = nested ?? throw new ArgumentNullException(nameof(nested));
+			_maxRetryCount = maxRetryCount;
 		}
 		#endregion
 
@@ -33,36 +31,55 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Client
 		public Task<RootDeliveryClubVendorsResponse> GetDeliveryClubVendorsNearby(string longitude, string latitude, CancellationToken cancellationToken = default(CancellationToken), int skip = 0,
 			int take = 200)
 		{
-			return _nested.GetDeliveryClubVendorsNearby(longitude, latitude, cancellationToken, skip, take);
+			return DoWithRetry
+			(
+				() => _nested.GetDeliveryClubVendorsNearby(longitude, latitude, cancellationToken, skip, take),
+				response => true
+			);
 		}
 
-		public async Task<DeliveryClubFoodInfo> GetFoodInfo(int vendorPointId, CancellationToken cancellationToken)
+		public Task<DeliveryClubFoodInfo> GetFoodInfo(int vendorPointId, CancellationToken cancellationToken)
+		{
+			return DoWithRetry(
+				() => _nested.GetFoodInfo(vendorPointId, cancellationToken), 
+				info => info?.Products?.Count > 0
+			);
+		}
+
+		public Task<string> Login(CancellationToken cancellationToken, bool forceReLogin = false)
+		{
+			return DoWithRetry(
+				() => _nested.Login(cancellationToken),
+				info => true
+			);
+		}
+		#endregion
+
+		#region [Private]
+		#region [Private methods]
+		private async Task<T> DoWithRetry<T>(Func<Task<T>> factory, Func<T, bool> successCheck)
 		{
 			bool found;
-			DeliveryClubFoodInfo result;
+			T result;
 			var retryCount = 0;
 			do
 			{
-				result = await _nested.GetFoodInfo(vendorPointId, cancellationToken);
+				result = await factory();
 
-				found = result.Products.Count > 0;
+				found = successCheck(result);
 				if (!found)
 				{
-					Logger.Trace("Found 0 products, retrying to get food info.");
+					Logger.Trace("Call was not successfull.");
 				}
 
 				retryCount++;
 			}
 			while (!found
-			       && retryCount < MaxRetryCount);
+			       && retryCount < _maxRetryCount);
 
 			return result;
 		}
-
-		public Task<string> Login(CancellationToken cancellationToken, bool forceReLogin = false)
-		{
-			return _nested.Login(cancellationToken, forceReLogin);
-		}
+		#endregion
 		#endregion
 	}
 }

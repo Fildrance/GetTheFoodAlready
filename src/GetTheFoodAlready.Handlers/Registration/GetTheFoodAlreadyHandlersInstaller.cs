@@ -48,6 +48,7 @@ namespace GetTheFoodAlready.Handlers.Registration
 			}
 
 			var deliveryClubClientSettings = new DeliveryClubClientSettings("https://api.delivery-club.ru", "api1.2");
+			var retryCount = Dependency.OnValue("maxRetryCount", 5);
 
 			container.Register(
 				// auto-mapper
@@ -63,7 +64,7 @@ namespace GetTheFoodAlready.Handlers.Registration
 
 				Component.For<HttpClientHandlerProvider>().Instance(nested => new LoggingHttpHandler(nested)),
 				
-				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClientDecorator>().LifestyleSingleton(),
+				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClientDecorator>().DependsOn(retryCount).LifestyleSingleton(),
 				Component.For<IDeliveryClubClient>().ImplementedBy<AutoLoginningDeliveryClubClientDecorator>().LifestyleSingleton(),
 				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),
 
