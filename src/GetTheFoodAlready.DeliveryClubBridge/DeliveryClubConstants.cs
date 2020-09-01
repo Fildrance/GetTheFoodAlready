@@ -9,5 +9,6 @@
 		internal const string UserAuthorizationHeaderName = "x-user-authorization";
 		internal const string CookiePackageHeaderName = "cookie";
 		internal const string SessionIdCookieName = "PHPSESSID";
+		internal const string CookieDomain = "https://www.delivery-club.ru/";
 	}
 }

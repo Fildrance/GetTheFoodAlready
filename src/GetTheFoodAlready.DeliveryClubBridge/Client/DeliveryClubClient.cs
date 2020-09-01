@@ -29,7 +29,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Client
 		#region [Fields]
 		private readonly HttpClient _client;
 		private readonly CookieContainer _cookieContainer = new CookieContainer();
-		private readonly Uri _cookieStoreUri = new Uri("https://www.delivery-club.ru/");
+		private readonly Uri _cookieStoreUri = new Uri(DeliveryClubConstants.CookieDomain);
 		private readonly DeliveryClubClientSettings _settings;
 		#endregion
 
@@ -123,12 +123,13 @@ namespace GetTheFoodAlready.DeliveryClubBridge.Client
 			var authKey = $"{token}.{secret}";
 			var xUserAuthCookie = new Cookie(DeliveryClubConstants.UserAuthorizationCookieName, authKey);
 			deliveryClubCookies.Add(xUserAuthCookie);
+			_cookieContainer.Add(_cookieStoreUri, deliveryClubCookies);
 
 			var authRelatedCookies = deliveryClubCookies.OfType<Cookie>()
 				.Where(cookie => cookie.Name == DeliveryClubConstants.SessionIdCookieName || cookie.Name == DeliveryClubConstants.UserAuthorizationCookieName)
 				.Select(x => $"{x.Name}={x.Value}")
 				.ToArray();
-			
+
 			_client.DefaultRequestHeaders.Remove(DeliveryClubConstants.UserAuthorizationHeaderName);
 			_client.DefaultRequestHeaders.Remove(DeliveryClubConstants.CookiePackageHeaderName);
 			_client.DefaultRequestHeaders.Add(DeliveryClubConstants.UserAuthorizationHeaderName, authKey);
