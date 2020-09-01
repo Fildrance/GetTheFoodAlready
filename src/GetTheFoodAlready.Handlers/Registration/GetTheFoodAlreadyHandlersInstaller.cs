@@ -13,6 +13,7 @@ using GetTheFoodAlready.DeliveryClubBridge;
 using GetTheFoodAlready.DeliveryClubBridge.Client;
 using GetTheFoodAlready.Handlers.Behaviours;
 using GetTheFoodAlready.Handlers.MappingProfiles;
+using GetTheFoodAlready.Handlers.RandomFoodRolling;
 using GetTheFoodAlready.Handlers.Support;
 
 using MediatR;
@@ -49,6 +50,7 @@ namespace GetTheFoodAlready.Handlers.Registration
 
 			var deliveryClubClientSettings = new DeliveryClubClientSettings("https://api.delivery-club.ru", "api1.2");
 			var retryCount = Dependency.OnValue("maxRetryCount", 5);
+			var dadataApiKeyDependency = Dependency.OnValue("token", dadataApiKey);
 
 			container.Register(
 				// auto-mapper
@@ -69,10 +71,15 @@ namespace GetTheFoodAlready.Handlers.Registration
 				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),
 
 				Component.For<IDaDataClient>().ImplementedBy<DaDataClient>().LifestyleSingleton()
-					.DependsOn(Dependency.OnValue("token", dadataApiKey)),
+					.DependsOn(dadataApiKeyDependency),
 				Component.For<HandlerTypeToImplementationCache>().ImplementedBy<HandlerTypeToImplementationCache>().LifestyleSingleton(),
-				Component.For<DeliveryClubExpectedTimeParser>().ImplementedBy<DeliveryClubExpectedTimeParser>().LifestyleSingleton(),
-				Component.For<DeliveryClubClientSettings>().Instance(deliveryClubClientSettings).LifestyleSingleton()
+				Component.For<ITimeSpanParser>().ImplementedBy<DeliveryClubExpectedTimeSpanParser>().LifestyleSingleton(),
+				Component.For<DeliveryClubClientSettings>().Instance(deliveryClubClientSettings).LifestyleSingleton(),
+				Component.For<IVendorFilter>().ImplementedBy<VendorFilter>(),
+
+				Component.For<IRandomFoodStrategy>().ImplementedBy<RerollIfEmptyFinalFoodResultsRandomFoodStrategy>()
+					.DependsOn(Dependency.OnValue("maxFoodItems", 4), Dependency.OnValue("maxRerollAttempts", 5)),
+				Component.For<IRandomFoodStrategyProvider>().ImplementedBy<FirstAcceptableRandomFoodStrategyProvider>()
 			);																						
 
 			if (_useSession)

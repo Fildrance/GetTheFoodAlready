@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using GetTheFoodAlready.Api.Support;
+
 namespace GetTheFoodAlready.DeliveryClubBridge
 {
-	public class DeliveryClubExpectedTimeParser
+	public class DeliveryClubExpectedTimeSpanParser : ITimeSpanParser
 	{
 		#region [Fields]
 		private readonly Dictionary<string, int> _expectedTimeStringToMinutes = new Dictionary<string, int>
@@ -48,12 +50,12 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 
 		#region [Public]
 		#region [Public methods]
-		public int GetPessimisticDeliveryTime(string timeAsString)
+		public virtual TimeSpan GetSpan(string timeAsString)
 		{
 			// todo : replace with actual parsing.
 			if (_expectedTimeStringToMinutes.TryGetValue(timeAsString, out var result))
 			{
-				return result;
+				return TimeSpan.FromMinutes(result);
 			}
 			throw new InvalidOperationException($"Failed to parse delivery time - unexpected symbol '{timeAsString}'!");
 		}

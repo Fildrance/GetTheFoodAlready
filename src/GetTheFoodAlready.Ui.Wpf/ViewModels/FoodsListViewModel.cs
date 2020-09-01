@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -96,14 +97,15 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			_canExecuteActionsWithProducs.OnNext(false);
 
 			var result = await _orchestrationService.GetRandomFoodPropositions(request);
-			_allFoodItems = new ObservableCollection<FoodInfo>(result.FullListOfFoodInfos);
-			_proposedFoodItems = new ObservableCollection<FoodInfo>(result.ProposedFoods);
+			var first = result.VendorsToRollResults.First();
+			_allFoodItems = new ObservableCollection<FoodInfo>(first.Value.totalList);
+			_proposedFoodItems = new ObservableCollection<FoodInfo>(first.Value.proposedList);
 			_foodItems = _proposedFoodItems;
 			this.RaisePropertyChanged(nameof(FoodItems));
 
 			_canExecuteActionsWithProducs.OnNext(true);
 
-			Vendor = result.VendorInfo;
+			Vendor = first.Key;
 		}
 		#endregion
 		#endregion
