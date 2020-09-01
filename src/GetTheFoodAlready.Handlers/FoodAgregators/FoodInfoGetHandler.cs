@@ -7,7 +7,7 @@ using AutoMapper;
 
 using GetTheFoodAlready.Api.FoodAgregators.Requests;
 using GetTheFoodAlready.Api.FoodAgregators.Responses;
-using GetTheFoodAlready.DeliveryClubBridge;
+using GetTheFoodAlready.DeliveryClubBridge.Client;
 
 using MediatR;
 

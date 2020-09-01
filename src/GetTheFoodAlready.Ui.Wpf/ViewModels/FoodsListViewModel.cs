@@ -98,6 +98,7 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			var result = await _orchestrationService.GetRandomFoodPropositions(request);
 			_allFoodItems = new ObservableCollection<FoodInfo>(result.FullListOfFoodInfos);
 			_proposedFoodItems = new ObservableCollection<FoodInfo>(result.ProposedFoods);
+			_foodItems = _proposedFoodItems;
 			this.RaisePropertyChanged(nameof(FoodItems));
 
 			_canExecuteActionsWithProducs.OnNext(true);
