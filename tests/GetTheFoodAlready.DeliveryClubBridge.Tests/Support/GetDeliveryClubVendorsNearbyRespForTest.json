@@ -1,0 +1,83 @@
+{
+	"vendors": {
+		"count": 2,
+		"hasMore": true,
+		"items": [
+			{
+				"alias": "testAlias",
+				"allowPreorder": true,
+				"categoryId": 1,
+				"chain": {
+					"alias": "test_msk",
+					"id": {
+						"primary": "12345"
+					}
+				},
+				"cover": {
+					"1200": "/naturmort/5d934899ddab7_720x450.jpg",
+					"1600": "/naturmort/5d934899ddab7_720x450.jpg",
+					"2048": "/naturmort/5d934899ddab7_720x450.jpg",
+					"480": "/naturmort/5d934899ddab7_480x300.jpg",
+					"720": "/naturmort/5d934899ddab7_720x450.jpg"
+				},
+				"cuisines": ["Суши", "Завтраки", "Супы", "Пицца"],
+				"delivery": {
+					"available": true,
+					"minOrderPrice": {
+						"value": 500
+					},
+					"price": {
+						"value": 0
+					},
+					"priceIntervals": [
+						{
+							"deliveryPrice": 0,
+							"minOrderTotal": 0
+						}
+					],
+					"provider": "marketplace",
+					"services": ["delivery"],
+					"time": "45 мин"
+				},
+				"id": {
+					"primary": "49883"
+				},
+				"labels": ["online_payment", "with_cards", "preorder", "delivery_free"],
+				"logo": "/logos_full/yami_yami_msk.jpg?1597735337",
+				"name": "TEST-TEST",
+				"openDays": "0,1,2,3,4,5,6",
+				"openFrom": "11:00",
+				"openTo": "23:59",
+				"payments": [
+					{
+						"type": "cash"
+					},
+					{
+						"type": "card_offline"
+					},
+					{
+						"type": "card_online"
+					},
+					{
+						"type": "androidpay"
+					},
+					{
+						"type": "samsungpay"
+					},
+					{
+						"type": "applepay"
+					},
+					{
+						"type": "sberspasibo"
+					}
+				],
+				"reviews": {
+					"ratingScore": "value",
+					"reviewCount": 4778,
+					"score": "4.5",
+					"scoreCount": 0
+				}
+			}
+		]
+	}
+}

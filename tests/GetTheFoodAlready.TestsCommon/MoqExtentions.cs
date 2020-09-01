@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 
 using Moq;
+using Moq.Protected;
 using Moq.Language;
 using Moq.Language.Flow;
 
@@ -52,6 +53,10 @@ namespace GetTheFoodAlready.TestsCommon
 	    {
 		    return Mock.Get(subject)
 			    .SetupSequence(expectedAction);
+	    }
+	    public static IProtectedMock<T> Protected<T>(this T subhect) where T : class
+	    {
+		    return ProtectedExtension.Protected(Mock.Get(subhect));
 	    }
 	}
 }

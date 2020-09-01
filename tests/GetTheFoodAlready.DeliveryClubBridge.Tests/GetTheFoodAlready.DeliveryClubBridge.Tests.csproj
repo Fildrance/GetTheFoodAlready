@@ -66,11 +66,19 @@
   <ItemGroup>
     <Compile Include="Integration\DeliveryClubClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Support\TestResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Unit\AutoLoginningDeliveryClubClientDecoratorTests.cs" />
     <Compile Include="Unit\AutoRetryingDeliveryClubClientDecoratorTests.cs" />
+    <Compile Include="Unit\DeliveryClubClientTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Support\GetDeliveryClubVendorsNearbyRespForTest.json" />
+    <None Include="Support\FoodInfoRespForTest.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\GetTheFoodAlready.Api\GetTheFoodAlready.Api.csproj">
@@ -85,6 +93,12 @@
       <Project>{F5DF2029-D9A1-43CE-B01D-8576B3C9E999}</Project>
       <Name>GetTheFoodAlready.TestsCommon</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Support\TestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

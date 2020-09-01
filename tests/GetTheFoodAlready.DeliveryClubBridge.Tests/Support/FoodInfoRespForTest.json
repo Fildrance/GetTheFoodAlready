@@ -1,0 +1,19 @@
+{
+	"products": [
+		{
+			"name": "someName",
+			"description": "item description",
+			"id": { "primary": 34651436 },
+			"price": { "value": 3432 },
+			"properties": {
+				"volume": 435314
+			}
+		}
+	],
+	"menu": [
+		{
+			"name": "menuItem",
+			"productIds": [34651436]
+		}
+	]
+}
