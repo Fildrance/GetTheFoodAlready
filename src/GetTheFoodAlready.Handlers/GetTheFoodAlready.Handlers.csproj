@@ -74,6 +74,12 @@
     <Compile Include="FoodAgregators\FoodInfoGetHandler.cs" />
     <Compile Include="Map\SuggestAddressHandler.cs" />
     <Compile Include="Orchestration\GetRandomFoodPropositionsHandler.cs" />
+    <Compile Include="RandomFoodRolling\IRandomFoodStrategy.cs" />
+    <Compile Include="RandomFoodRolling\IRandomFoodStrategyProvider.cs" />
+    <Compile Include="RandomFoodRolling\IVendorFilter.cs" />
+    <Compile Include="RandomFoodRolling\RerollIfEmptyFinalFoodResultsRandomFoodStrategy.cs" />
+    <Compile Include="RandomFoodRolling\FirstAcceptableRandomFoodStrategyProvider.cs" />
+    <Compile Include="RandomFoodRolling\VendorFilter.cs" />
     <Compile Include="Support\HandlerTypeToImplementationCache.cs" />
     <Compile Include="Behaviours\LoggingBehaviour.cs" />
     <Compile Include="FoodAgregators\GetClosestVendorPointsHandler.cs" />
@@ -98,5 +104,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

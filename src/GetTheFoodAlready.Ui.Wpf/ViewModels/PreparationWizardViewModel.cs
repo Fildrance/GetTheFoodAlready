@@ -26,9 +26,11 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 
 				SetupLocationViewModel.SaveSelected();
 
-				var acceptableDeliveryTil = SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil == null
-					? null
-					: (int?) SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil.Value;
+				TimeSpan? acceptableDeliveryTil = null;
+				if (SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil != null)
+				{
+					acceptableDeliveryTil = TimeSpan.FromMinutes(SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil.Value);
+				}
 
 				RatingInfo ratingInfo = null;
 				if (SetupVendorPointBasicPreferencesViewModel.IsRatingImportant)
