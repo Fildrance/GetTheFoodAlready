@@ -13,12 +13,14 @@ namespace GetTheFoodAlready.Api.Orchestration.Requests
 	{
 		public RandomFoodPropositionsRequest(
 			AddressInfo addressInfo,
-			int? acceptableDeliveryTimeTil,
+			TimeSpan? acceptableDeliveryTimeTil,
 			IReadOnlyCollection<string> acceptableCuisineTypes,
 			IReadOnlyCollection<string> acceptablePaymentTypes,
 			bool isSearchingOnlyFreeDeliveryMarked,
 			int? minimumOrderAmount,
-			RatingInfo requiredRatingInfo, IReadOnlyCollection<string> foodCategoryExceptions)
+			RatingInfo requiredRatingInfo, 
+			IReadOnlyCollection<string> foodCategoryExceptions
+		)
 		{
 			AddressInfo = addressInfo ?? throw new ArgumentNullException(nameof(addressInfo));
 			AcceptableDeliveryTimeTil = acceptableDeliveryTimeTil;
@@ -29,8 +31,9 @@ namespace GetTheFoodAlready.Api.Orchestration.Requests
 			RequiredRatingInfo = requiredRatingInfo;
 			FoodCategoryExceptions = foodCategoryExceptions ?? throw new ArgumentNullException(nameof(foodCategoryExceptions));
 		}
+
 		public AddressInfo AddressInfo { get; }
-		public int? AcceptableDeliveryTimeTil { get; }
+		public TimeSpan? AcceptableDeliveryTimeTil { get; }
 		public IReadOnlyCollection<string> AcceptableCuisineTypes { get; }
 		public IReadOnlyCollection<string> AcceptablePaymentTypes { get; }
 		public IReadOnlyCollection<string> FoodCategoryExceptions { get; }
@@ -38,6 +41,7 @@ namespace GetTheFoodAlready.Api.Orchestration.Requests
 		public int? MinimumOrderAmount { get; }
 		public RatingInfo RequiredRatingInfo { get; }
 	}
+
 	public class RatingInfo
 	{
 		public RatingInfo(decimal minimalRating, int rateCount)

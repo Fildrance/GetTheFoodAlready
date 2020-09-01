@@ -15,25 +15,27 @@
 			</Style>
 		</DataTemplate.Resources>
 		<StackPanel>
+			<StackPanel Margin="5 0 5 8">
+				<Label>Vendor</Label>
+				<TextBox IsReadOnly="True" Text="{Binding Vendor.DisplayName}"></TextBox>
+
+				<Label>Delivery price</Label>
+				<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryPrice}"></TextBox>
+
+				<Label>Delivery time</Label>
+				<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryTime}"></TextBox>
+
+				<Label>Is delivery free?</Label>
+				<TextBox IsReadOnly="True" Text="{Binding Vendor.IsDeliveringForFree}"></TextBox>
+
+				<Label>Score</Label>
+				<TextBox IsReadOnly="True" Text="{Binding Vendor.Score}"></TextBox>
+
+				<Label>Minimum order</Label>
+				<TextBox IsReadOnly="True" Text="{Binding Vendor.MinOrderTotal}"></TextBox>
+
+			</StackPanel>
 			
-			<Label>Vendor</Label>
-			<TextBox IsReadOnly="True" Text="{Binding Vendor.DisplayName}"></TextBox>
-
-			<Label>Delivery price</Label>
-			<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryPrice}"></TextBox>
-
-			<Label>Delivery time</Label>
-			<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryTime}"></TextBox>
-
-			<Label>Is delivery free?</Label>
-			<TextBox IsReadOnly="True" Text="{Binding Vendor.IsDeliveringForFree}"></TextBox>
-
-			<Label>Score</Label>
-			<TextBox IsReadOnly="True" Text="{Binding Vendor.Score}"></TextBox>
-
-			<Label>Minimum order</Label>
-			<TextBox IsReadOnly="True" Text="{Binding Vendor.MinOrderTotal}"></TextBox>
-
 			<DataGrid ItemsSource="{Binding FoodItems}" Height="500" IsReadOnly="True" AutoGenerateColumns="False">
 				<DataGrid.Columns>
 					<DataGridTextColumn Width="2*" Binding="{Binding ProductName}" Header="Name" />

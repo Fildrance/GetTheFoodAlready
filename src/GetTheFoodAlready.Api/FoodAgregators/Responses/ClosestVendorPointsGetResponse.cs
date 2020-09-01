@@ -34,5 +34,11 @@ namespace GetTheFoodAlready.Api.FoodAgregators.Responses
 		public int? ScoreCount { get; set; }
 		public string DeliveryTime { get; set; }
 		public bool IsDeliveringForFree { get; set; }
+		/// <summary>Возвращает строку, представляющую текущий объект.</summary>
+		/// <returns>Строка, представляющая текущий объект.</returns>
+		public override string ToString()
+		{
+			return $"Name: '{DisplayName}', Id:'{Id}'";
+		}
 	}
 }

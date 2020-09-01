@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using GetTheFoodAlready.Api.FoodAgregators.Responses;
 
@@ -7,24 +6,17 @@ namespace GetTheFoodAlready.Api.Orchestration.Reponses
 {
 	public class RandomFoodPropositionsResponse 
 	{
+		// tmp solution with tuple, need to see secnarios for usage of that response to deduce proper data structure.
 		#region [c-tor]
-		public RandomFoodPropositionsResponse(
-			IReadOnlyCollection<FoodInfo> foodInfos, 
-			IReadOnlyCollection<FoodInfo> proposedFoods,
-			VendorInfo vendorInfo
-		)
+		public RandomFoodPropositionsResponse(IReadOnlyDictionary<VendorInfo, (IEnumerable<FoodInfo> totalList, IEnumerable<FoodInfo> proposedList)> vendorsToRollResults)
 		{
-			FullListOfFoodInfos = foodInfos ?? throw new ArgumentNullException(nameof(foodInfos));
-			ProposedFoods = proposedFoods ?? throw new ArgumentNullException(nameof(proposedFoods));
-			VendorInfo = vendorInfo ?? throw new ArgumentNullException(nameof(vendorInfo));
+			VendorsToRollResults = vendorsToRollResults;
 		}
 		#endregion
 
 		#region [Public]
 		#region [Public properties]
-		public IReadOnlyCollection<FoodInfo> FullListOfFoodInfos { get; }
-		public IReadOnlyCollection<FoodInfo> ProposedFoods { get; }
-		public VendorInfo VendorInfo { get; }
+		public IReadOnlyDictionary<VendorInfo, (IEnumerable<FoodInfo> totalList, IEnumerable<FoodInfo> proposedList)> VendorsToRollResults { get; }
 		#endregion
 		#endregion
 	}
