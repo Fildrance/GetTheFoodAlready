@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 
 using GetTheFoodAlready.Ui.Wpf.Registration;
@@ -48,6 +49,7 @@ namespace GetTheFoodAlready.Ui.Wpf
 				Logger.Info("Composing application root - Registration.");
 				_container = new WindsorContainer()
 					.Install(new AppInstaller());
+				_container.Kernel.Resolver.AddSubResolver(new CollectionResolver(_container.Kernel));
 
 				Logger.Info("Composing application root - Resolution.");
 				var mainWindow = _container.Resolve<MainWindow>();
