@@ -31,13 +31,13 @@ namespace GetTheFoodAlready.DeliveryClubBridge.DataTypes
 	public class ItemPrice
 	{
 		public string Currency { get; set; }
-		public int Value { get; set; }
+		public decimal Value { get; set; }
 	}
 
 	public class ItemProperties
 	{
 		/// <summary> Item volume in milliliters.</summary>
-		public int? Volume { get; set; }
+		public decimal? Volume { get; set; }
 		/// <summary> Item weight in gramms. </summary>
 		public string Weight { get; set; }
 	}
