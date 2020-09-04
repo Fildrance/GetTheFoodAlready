@@ -8,7 +8,7 @@ using Moq.Language.Flow;
 
 namespace GetTheFoodAlready.TestsCommon
 {
-    public static class MoqExtentions
+    public static class MoqExtensions
     {
 	    public static ISetup<T, TResult> Setup<T, TResult>(this T subject, Expression<Func<T, TResult>> expectedAction) where T : class
 	    {

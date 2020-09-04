@@ -62,6 +62,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.10.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
@@ -164,7 +167,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppConstants.cs" />
+    <Compile Include="MappingProfiles\ViewModelToSafeDefaultsMappingProfile.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -182,16 +187,20 @@
       <DependentUpon>MessageResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Support\DefaultLocationManager.cs" />
-    <Compile Include="Support\IDefaultLocationManager.cs" />
+    <Compile Include="Support\DefaultManager.cs" />
+    <Compile Include="Support\ViewModelExtensions.cs" />
+    <Compile Include="Support\IDefaultManager.cs" />
     <Compile Include="Support\SingleAppInstanceHelper.cs" />
     <Compile Include="Support\FrameLoadEndWatchingHandler.cs" />
+    <Compile Include="Support\FoodPreference.cs" />
     <Compile Include="ViewModels\FoodsListViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\PreparationWizardViewModel.cs" />
     <Compile Include="Support\SelectBoxItem.cs" />
     <Compile Include="ViewModels\SetupFoodPreferencesViewModel.cs" />
     <Compile Include="ViewModels\SetupLocationViewModel.cs" />
-    <Compile Include="ViewModels\SetupVendorPointBasicPreferencesViewModel.cs" />
+    <Compile Include="ViewModels\SetupVendorPointPreferencesViewModel.cs" />
+    <Compile Include="Support\VendorPointPreferences.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -258,9 +267,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converter\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GetTheFoodAlready.Api\GetTheFoodAlready.Api.csproj">
       <Project>{f3f5d8ec-34aa-464c-bab4-c5bcaeeb2915}</Project>

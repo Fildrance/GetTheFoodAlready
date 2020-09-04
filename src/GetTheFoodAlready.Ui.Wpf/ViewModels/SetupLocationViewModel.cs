@@ -40,15 +40,15 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		private bool _isPropositionsListOpen;
 		private bool _locationUpdateShouldIgnoreMapControl;
 
-		private readonly IDefaultLocationManager _defaultLocationManager;
+		private readonly IDefaultManager<AddressInfo> _defaultLocationManager;
 		private readonly IMapService _mapService;
 		private readonly string _googleApiKey;
 		#endregion
 
 		#region [c-tor]
 		public SetupLocationViewModel(
-			IMapService mapService, 
-			IDefaultLocationManager defaultLocationManager, 
+			IMapService mapService,
+			IDefaultManager<AddressInfo> defaultLocationManager, 
 			string googleApiKey
 		)
 		{
@@ -104,8 +104,13 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		/// <summary> Prepares default location of user. </summary>
 		public async Task SetupDefaultLocation()
 		{
-			var defaultLocation = await _defaultLocationManager.GetDefaultLocation();
+			var defaultLocation = await _defaultLocationManager.GetDefault();
 			_defaultLocation.OnNext(defaultLocation);
+		}
+
+		public void SaveDefault()
+		{
+			_defaultLocationManager.SaveDefault(SelectedLocation);
 		}
 
 		/// <summary> Prepares observables of view-model. </summary>
@@ -238,10 +243,6 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			{
 				_onMapClickAction(lat, lng, name);
 			}
-		}
-		public void SaveSelected()
-		{
-			_defaultLocationManager.SaveDefault(SelectedLocation);
 		}
 	}
 }

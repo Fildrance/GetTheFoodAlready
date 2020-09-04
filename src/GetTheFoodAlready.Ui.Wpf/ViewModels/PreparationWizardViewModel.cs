@@ -14,31 +14,33 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#region [c-tor]
 		public PreparationWizardViewModel(
 			SetupLocationViewModel setupLocation,
-			SetupVendorPointBasicPreferencesViewModel setupVendorPointBasicPreferences,
+			SetupVendorPointPreferencesViewModel setupVendorPointPreferences,
 			SetupFoodPreferencesViewModel setupFoodPreferencesViewModel
 		)
 		{
 			SetupLocationViewModel = setupLocation ?? throw new ArgumentNullException(nameof(setupLocation));
-			SetupVendorPointBasicPreferencesViewModel = setupVendorPointBasicPreferences ?? throw new ArgumentNullException(nameof(setupVendorPointBasicPreferences));
+			SetupVendorPointPreferencesViewModel = setupVendorPointPreferences ?? throw new ArgumentNullException(nameof(setupVendorPointPreferences));
 			SetupFoodPreferencesViewModel = setupFoodPreferencesViewModel ?? throw new ArgumentNullException(nameof(setupFoodPreferencesViewModel));
 
 			FinishCommand = ReactiveCommand.Create(() => {
 
-				SetupLocationViewModel.SaveSelected();
+				SetupLocationViewModel.SaveDefault();
+				SetupVendorPointPreferencesViewModel.SaveDefault();
+				SetupFoodPreferencesViewModel.SaveDefault();
 
 				TimeSpan? acceptableDeliveryTil = null;
-				if (SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil != null)
+				if (SetupVendorPointPreferencesViewModel.SelectedAcceptableDeliveryTimeTil != null)
 				{
-					acceptableDeliveryTil = TimeSpan.FromMinutes(SetupVendorPointBasicPreferencesViewModel.SelectedAcceptableDeliveryTimeTil.Value);
+					acceptableDeliveryTil = TimeSpan.FromMinutes(SetupVendorPointPreferencesViewModel.SelectedAcceptableDeliveryTimeTil.Value);
 				}
 
 				RatingInfo ratingInfo = null;
-				if (SetupVendorPointBasicPreferencesViewModel.IsRatingImportant)
+				if (SetupVendorPointPreferencesViewModel.IsRatingImportant)
 				{
 					ratingInfo = new RatingInfo
 					(
-						SetupVendorPointBasicPreferencesViewModel.MinimumRaiting.Value,
-						SetupVendorPointBasicPreferencesViewModel.MinimumRateVoteCount.Value
+						SetupVendorPointPreferencesViewModel.MinimumRaiting.Value,
+						SetupVendorPointPreferencesViewModel.MinimumRateVoteCount.Value
 					);
 				}
 
@@ -46,10 +48,10 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 				(
 					SetupLocationViewModel.SelectedLocation,
 					acceptableDeliveryTil,
-					SetupVendorPointBasicPreferencesViewModel.GetSelectedCuisines(),
-					SetupVendorPointBasicPreferencesViewModel.GetSelectedPaymentTypes(),
-					SetupVendorPointBasicPreferencesViewModel.IsOnlyFreeDelivery,
-					SetupVendorPointBasicPreferencesViewModel.MinimumOrderAmount,
+					SetupVendorPointPreferencesViewModel.GetSelectedCuisines(),
+					SetupVendorPointPreferencesViewModel.GetSelectedPaymentTypes(),
+					SetupVendorPointPreferencesViewModel.IsOnlyFreeDelivery,
+					SetupVendorPointPreferencesViewModel.MinimumOrderAmount,
 					ratingInfo,
 					SetupFoodPreferencesViewModel.GetExcludedMenuParts()
 				);
@@ -70,7 +72,7 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		public IObservable<RandomFoodPropositionsRequest> FinishObservable => FinishCommand.LoggedCatch(this, Observable.Return((RandomFoodPropositionsRequest) null));
 		public SetupFoodPreferencesViewModel SetupFoodPreferencesViewModel { get; }
 		public SetupLocationViewModel SetupLocationViewModel { get; }
-		public SetupVendorPointBasicPreferencesViewModel SetupVendorPointBasicPreferencesViewModel { get; }
+		public SetupVendorPointPreferencesViewModel SetupVendorPointPreferencesViewModel { get; }
 		#endregion
 		#endregion
 	}

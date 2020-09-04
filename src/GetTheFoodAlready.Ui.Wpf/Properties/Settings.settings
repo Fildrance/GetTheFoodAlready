@@ -2,7 +2,13 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GetTheFoodAlready.Ui.Wpf.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DefaultUserLocationAddress" Type="System.String" Scope="User">
+    <Setting Name="AddressInfo" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VendorPointPreferences" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FoodPreference" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

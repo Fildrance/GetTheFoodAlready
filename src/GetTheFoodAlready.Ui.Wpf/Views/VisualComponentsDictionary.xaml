@@ -87,7 +87,7 @@
 			                 Title="Choose your vendor point preferences"
 			                 NextPage="{Binding ElementName=SetupFoodPreferences}"
 			                 PreviousPage="{Binding ElementName=Interior}">
-				<ContentPresenter Content="{Binding SetupVendorPointBasicPreferencesViewModel}" />
+				<ContentPresenter Content="{Binding SetupVendorPointPreferencesViewModel}" />
 			</xctk:WizardPage>
 
 			<xctk:WizardPage x:Name="SetupFoodPreferences" PageType="Interior"
@@ -122,29 +122,28 @@
 		</Grid>
 	</DataTemplate>
 
-	<DataTemplate DataType="{x:Type vm:SetupVendorPointBasicPreferencesViewModel}">
+	<DataTemplate DataType="{x:Type vm:SetupVendorPointPreferencesViewModel}">
 		<StackPanel Width="600" HorizontalAlignment="Left">
-
 
 			<Label Content="Choose preferred time-range for delivery" />
 			<ComboBox
-				SelectedValue="{Binding SelectedAcceptableDeliveryTimeTil}"
-			          ItemsSource="{Binding AcceptableDeliveryTimes}"
-			          DisplayMemberPath="Text" />
+					SelectedValuePath="Value"
+					SelectedValue="{Binding SelectedAcceptableDeliveryTimeTil}"
+			        ItemsSource="{Binding AcceptableDeliveryTimes}"
+			        DisplayMemberPath="Text" />
 
 			<Label Content="Choose preferred cuisine types (empty means any allowed)" />
 			<xctk:CheckComboBox x:Name="CuisineSelect"
 			                    DisplayMemberPath="Text"
-			                    ValueMemberPath="Value"
-			                    SelectedItemsOverride="{Binding SelectedCuisines}"
-			                    ItemsSource="{Binding AvailableCuisines}" />
+			                    ItemsSource="{Binding AvailableCuisines}" 
+			                    SelectedMemberPath="IsSelected"/>
 
 			<Label Content="Choose preferred payment types (empty means any allowed)" />
 			<xctk:CheckComboBox x:Name="PaymentTypeSelect"
 			                    DisplayMemberPath="Text"
-			                    ValueMemberPath="Value"
-			                    SelectedItemsOverride="{Binding SelectedPaymentTypes}"
-			                    ItemsSource="{Binding AvailablePaymentTypes}" />
+			                    ItemsSource="{Binding AvailablePaymentTypes}" 
+								SelectedMemberPath="IsSelected"
+			                    />
 
 			<Border Height="40" >
 				<CheckBox IsChecked="{Binding IsOnlyFreeDelivery, Mode=TwoWay}"
@@ -185,8 +184,6 @@
 			        AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="0"
 			        TickFrequency="100" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" />
 
-
-
 		</StackPanel>
 	</DataTemplate>
 
@@ -195,8 +192,7 @@
 			<Label Content="Choose excluded menu parts (empty means any allowed)" />
 			<xctk:CheckComboBox x:Name="PaymentTypeSelect"
 			                    DisplayMemberPath="Text"
-			                    ValueMemberPath="Value"
-			                    SelectedItemsOverride="{Binding SelectedMenuPartsToExclude}"
+								SelectedMemberPath="IsSelected"
 			                    ItemsSource="{Binding AvailableToExcludeMenuParts}" />
 		</StackPanel>
 	</DataTemplate>

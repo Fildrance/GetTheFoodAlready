@@ -6,8 +6,6 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 {
 	public class MainViewModel : ReactiveObject
 	{
-		private PreparationWizardViewModel _wizardViewModel;
-		private FoodsListViewModel _foodsListViewModel;
 		private ReactiveObject _currentViewModel;
 
 		#region [c-tor]
@@ -16,14 +14,13 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			FoodsListViewModel foodsListViewModel
 		)
 		{
-			_wizardViewModel = preparationWizardViewModel;
-			_foodsListViewModel = foodsListViewModel;
+			var foodsListViewModel1 = foodsListViewModel;
 
 			CurrentViewModel = preparationWizardViewModel;
 
-			_wizardViewModel.FinishObservable.Subscribe(x => {
-				CurrentViewModel = _foodsListViewModel;
-				_foodsListViewModel.FilterInfo = x;
+			preparationWizardViewModel.FinishObservable.Subscribe(x => {
+				CurrentViewModel = foodsListViewModel1;
+				foodsListViewModel1.FilterInfo = x;
 			});
 		}
 		#endregion
