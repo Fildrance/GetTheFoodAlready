@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using GetTheFoodAlready.Api.Support;
-using GetTheFoodAlready.Ui.Wpf.Properties;
 
 using Newtonsoft.Json;
 
@@ -14,21 +13,19 @@ using NLog;
 namespace GetTheFoodAlready.Ui.Wpf.Support
 {
 	/// <summary> Default implementation. </summary>
-	public class DefaultLocationManager : IDefaultLocationManager
+	public class DefaultLocationManager : DefaultManager<AddressInfo>
 	{
 		#region [Static fields]
 		private static readonly ILogger Logger = LogManager.GetLogger(typeof(DefaultLocationManager).FullName);
 		#endregion
 
 		#region IDefaultLocationManager implementation
-		public async Task<AddressInfo> GetDefaultLocation()
+		public override async Task<AddressInfo> GetDefault()
 		{
-			var settings = Settings.Default;
-
-			var defaultSetting = settings.DefaultUserLocationAddress;
-			if (!string.IsNullOrEmpty(defaultSetting))
+			var defaulResult = await base.GetDefault();
+			if (null != defaulResult)
 			{
-				return JsonConvert.DeserializeObject<AddressInfo>(defaultSetting);
+				return defaulResult;
 			}
 
 			var client = new HttpClient();
@@ -69,17 +66,7 @@ namespace GetTheFoodAlready.Ui.Wpf.Support
 
 			var found = new AddressInfo("", lat, lng);
 
-			settings.DefaultUserLocationAddress = JsonConvert.SerializeObject(found);
-			settings.Save();
-
 			return found;
-		}
-
-		public void SaveDefault(AddressInfo addressInfo)
-		{
-			var settings = Settings.Default;
-			settings.DefaultUserLocationAddress = JsonConvert.SerializeObject(addressInfo);
-			settings.Save();
 		}
 		#endregion
 

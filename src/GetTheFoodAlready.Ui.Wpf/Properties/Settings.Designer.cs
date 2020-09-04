@@ -26,12 +26,36 @@ namespace GetTheFoodAlready.Ui.Wpf.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DefaultUserLocationAddress {
+        public string AddressInfo {
             get {
-                return ((string)(this["DefaultUserLocationAddress"]));
+                return ((string)(this["AddressInfo"]));
             }
             set {
-                this["DefaultUserLocationAddress"] = value;
+                this["AddressInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string VendorPointPreferences {
+            get {
+                return ((string)(this["VendorPointPreferences"]));
+            }
+            set {
+                this["VendorPointPreferences"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FoodPreference {
+            get {
+                return ((string)(this["FoodPreference"]));
+            }
+            set {
+                this["FoodPreference"] = value;
             }
         }
     }

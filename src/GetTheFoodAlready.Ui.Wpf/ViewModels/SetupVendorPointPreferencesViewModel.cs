@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
+using AutoMapper;
 
 using GetTheFoodAlready.Ui.Wpf.Support;
 
@@ -8,26 +11,35 @@ using ReactiveUI;
 
 namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 {
-	public class SetupVendorPointBasicPreferencesViewModel : ReactiveObject
+	public class SetupVendorPointPreferencesViewModel : ReactiveObject
 	{
-		#region [Static methods]
-		#endregion
-
 		#region [Fields]
-		private IList<SelectBoxItem<string>> _availablePaymentTypes;
+		private readonly IDefaultManager<VendorPointPreferences> _defaultManager;
+		private readonly IMapper _mapper;
+
 		private bool _isMinimumOrderAmountUsed;
 		private bool _isOnlyFreeDelivery;
 		private bool _isRatingImportant;
 		private int? _minimumOrderAmount;
 		private decimal? _minimumRaiting;
 		private int? _minimumRateVoteCount;
-		private SelectBoxItem<int> _selectedAcceptableDeliveryTimeTil;
-		private IList<SelectBoxItem<string>> _selectedCuisines;
+		private int? _selectedAcceptableDeliveryTimeTil;
+		#endregion
+
+		#region [c-tor]
+		public SetupVendorPointPreferencesViewModel(
+			IDefaultManager<VendorPointPreferences> defaultManager, 
+			IMapper mapper
+		)
+		{
+			_defaultManager = defaultManager ?? throw new ArgumentNullException(nameof(defaultManager));
+			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+		}
 		#endregion
 
 		#region [Public]
 		#region [Public properties]
-		public IList<SelectBoxItem<int>> AcceptableDeliveryTimes { get; } = new List<SelectBoxItem<int>>
+		public IList<SelectBoxItem<int>> AcceptableDeliveryTimes { get; set; } = new List<SelectBoxItem<int>>
 		{
 			new SelectBoxItem<int>(15, "до 15 минут"),
 			new SelectBoxItem<int>(30, "до 30 минут"),
@@ -35,12 +47,12 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			new SelectBoxItem<int>(60, "до 60 минут"),
 			new SelectBoxItem<int>(90, "до 90 минут")
 		};
-		public IList<SelectBoxItem<string>> AvailableCuisines { get; } = new List<SelectBoxItem<string>>
+		public IList<SelectBoxItem<string>> AvailableCuisines { get; set; } = new List<SelectBoxItem<string>>
 		{
 			new SelectBoxItem<string>("burger", "Бургеры"),
 			new SelectBoxItem<string>("indiyskaya", "Индийская"),
 		};
-		public IList<SelectBoxItem<string>> AvailablePaymentTypes { get; } = new List<SelectBoxItem<string>>
+		public IList<SelectBoxItem<string>> AvailablePaymentTypes { get; set; } = new List<SelectBoxItem<string>>
 		{
 			new SelectBoxItem<string>("card_offline", "Картой курьеру"),
 			new SelectBoxItem<string>("card_online", "Картой предварительно"),
@@ -94,38 +106,45 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		public string MinimunOrderAmountLabel => $"Select minimum order amount ({MinimumOrderAmount})";
 		public string MinimunRateVoteCountLabel => $"Select minimum amount of votes for rating ({MinimumRateVoteCount})";
 		public string MinimunRatingLabel => $"Select minimum allowed rating ({MinimumRaiting:F1})";
-		public SelectBoxItem<int> SelectedAcceptableDeliveryTimeTil
+		public int? SelectedAcceptableDeliveryTimeTil
 		{
 			get => _selectedAcceptableDeliveryTimeTil;
 			set => this.RaiseAndSetIfChanged(ref _selectedAcceptableDeliveryTimeTil, value);
-		}
-		public IList<SelectBoxItem<string>> SelectedCuisines
-		{
-			get => _selectedCuisines;
-			set => this.RaiseAndSetIfChanged(ref _selectedCuisines, value);
-		}
-		public IList<SelectBoxItem<string>> SelectedPaymentTypes
-		{
-			get => _availablePaymentTypes;
-			set => this.RaiseAndSetIfChanged(ref _availablePaymentTypes, value);
 		}
 		#endregion
 
 		#region [Public methods]
 		public IReadOnlyCollection<string> GetSelectedCuisines()
 		{
-			return SelectedCuisines == null
-				? Array.Empty<string>()
-				: SelectedCuisines.Select(x => x.Text)
-					.ToArray();
+			var items = AvailableCuisines.Where(x => x.IsSelected)
+				.ToArray();
+			return items.Any()
+				? items.Select(x => x.Text)
+					.ToArray()
+				: Array.Empty<string>();
 		}
 
 		public IReadOnlyCollection<string> GetSelectedPaymentTypes()
 		{
-			return SelectedPaymentTypes == null
-				? Array.Empty<string>()
-				: SelectedPaymentTypes.Select(x => x.Value)
-					.ToArray();
+			var items = AvailablePaymentTypes.Where(x => x.IsSelected)
+				.ToArray();
+			return items.Any()
+				? items.Select(x => x.Value)
+					.ToArray()
+				: Array.Empty<string>();
+		}
+
+		public async Task<SetupVendorPointPreferencesViewModel> SetupDefault()
+		{
+			var defaults = await _defaultManager.GetDefault();
+			_mapper.Map(defaults, this);
+			return this;
+		}
+
+		public void SaveDefault()
+		{
+			var mapped = _mapper.Map<VendorPointPreferences>(this);
+			_defaultManager.SaveDefault(mapped);
 		}
 		#endregion
 		#endregion
