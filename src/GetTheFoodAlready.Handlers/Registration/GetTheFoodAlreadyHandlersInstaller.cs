@@ -12,6 +12,7 @@ using GetTheFoodAlready.DaDataBridge;
 using GetTheFoodAlready.DeliveryClubBridge;
 using GetTheFoodAlready.DeliveryClubBridge.Client;
 using GetTheFoodAlready.Handlers.Behaviours;
+using GetTheFoodAlready.Handlers.Behaviours.Validation;
 using GetTheFoodAlready.Handlers.MappingProfiles;
 using GetTheFoodAlready.Handlers.RandomFoodRolling;
 using GetTheFoodAlready.Handlers.Support;
@@ -28,14 +29,16 @@ namespace GetTheFoodAlready.Handlers.Registration
 		private readonly bool _useLogging;
 		private readonly bool _useProfiling;
 		private readonly bool _useSession;
+		private readonly bool _useValidation;
 		#endregion
 
 		#region [c-tor]
-		public GetTheFoodAlreadyHandlersInstaller(bool useLogging = true, bool useProfiling = true, bool useSession = true)
+		public GetTheFoodAlreadyHandlersInstaller(bool useLogging = true, bool useProfiling = true, bool useSession = true, bool useValidation = true)
 		{
 			_useLogging = useLogging;
 			_useProfiling = useProfiling;
 			_useSession = useSession;
+			_useValidation = useValidation;
 		}
 		#endregion
 
@@ -60,28 +63,39 @@ namespace GetTheFoodAlready.Handlers.Registration
 					var profiles = x.ResolveAll<Profile>();
 					return new MapperConfiguration(c => c.AddProfiles(profiles));
 				}),
+				
+				// delivery client
+				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClientDecorator>().DependsOn(retryCount).LifestyleSingleton(),
+				Component.For<IDeliveryClubClient>().ImplementedBy<AutoLoginningDeliveryClubClientDecorator>().LifestyleSingleton(),
+				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),
+				Component.For<ITimeSpanParser>().ImplementedBy<DeliveryClubExpectedTimeSpanParser>().LifestyleSingleton(),
+				Component.For<DeliveryClubClientSettings>().Instance(deliveryClubClientSettings).LifestyleSingleton(),
+
+				// dadata client
+				Component.For<IDaDataClient>().ImplementedBy<DaDataClient>().LifestyleSingleton()
+					.DependsOn(dadataApiKeyDependency),
+
 				// mediatr handlers
 				Classes.FromThisAssembly().BasedOn(typeof(IRequestHandler<,>)).WithServiceAllInterfaces().LifestyleSingleton(),
 				Classes.FromThisAssembly().BasedOn(typeof(INotificationHandler<>)).WithServiceAllInterfaces().LifestyleSingleton(),
 
+				Component.For<IValidatorProvider>().ImplementedBy<ValidatorProvider>().LifestyleSingleton(),
 				Component.For<HttpClientHandlerProvider>().Instance(nested => new LoggingHttpHandler(nested)),
-				
-				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClientDecorator>().DependsOn(retryCount).LifestyleSingleton(),
-				Component.For<IDeliveryClubClient>().ImplementedBy<AutoLoginningDeliveryClubClientDecorator>().LifestyleSingleton(),
-				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),
-
-				Component.For<IDaDataClient>().ImplementedBy<DaDataClient>().LifestyleSingleton()
-					.DependsOn(dadataApiKeyDependency),
 				Component.For<HandlerTypeToImplementationCache>().ImplementedBy<HandlerTypeToImplementationCache>().LifestyleSingleton(),
-				Component.For<ITimeSpanParser>().ImplementedBy<DeliveryClubExpectedTimeSpanParser>().LifestyleSingleton(),
-				Component.For<DeliveryClubClientSettings>().Instance(deliveryClubClientSettings).LifestyleSingleton(),
-				Component.For<IVendorFilter>().ImplementedBy<VendorFilter>(),
 
+				Component.For<IVendorFilter>().ImplementedBy<VendorFilter>(),
 				Component.For<IRandomFoodStrategy>().ImplementedBy<RerollIfEmptyFinalFoodResultsRandomFoodStrategy>()
 					.DependsOn(Dependency.OnValue("maxFoodItems", 4), Dependency.OnValue("maxRerollAttempts", 5)),
 				Component.For<IRandomFoodStrategyProvider>().ImplementedBy<FirstAcceptableRandomFoodStrategyProvider>()
-			);																						
+			);
 
+			if (_useValidation)
+			{
+				container.Register
+				(
+					Component.For(typeof(IPipelineBehavior<,>)).ImplementedBy(typeof(ValidatingBehaviour<,>))
+				);
+			}
 			if (_useSession)
 			{
 				container.Register

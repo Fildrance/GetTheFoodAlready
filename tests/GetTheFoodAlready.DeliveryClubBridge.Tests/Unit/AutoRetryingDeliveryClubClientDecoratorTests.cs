@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ using NUnit.Framework;
 
 namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Unit
 {
+	[ExcludeFromCodeCoverage, TestFixture, Category("Unit")]
 	public class AutoRetryingDeliveryClubClientDecoratorTests
 	{
 		private AutoRetryingDeliveryClubClientDecorator _cut;

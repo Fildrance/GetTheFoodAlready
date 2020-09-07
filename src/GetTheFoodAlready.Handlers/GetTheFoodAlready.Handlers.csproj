@@ -41,6 +41,9 @@
     <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentValidation.9.2.0\lib\net461\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="MediatR, Version=8.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MediatR.8.1.0\lib\net461\MediatR.dll</HintPath>
     </Reference>
@@ -70,6 +73,9 @@
     <Compile Include="Behaviours\ProfilingBehaviour.cs" />
     <Compile Include="Behaviours\Session.cs" />
     <Compile Include="Behaviours\SessionBehaviour.cs" />
+    <Compile Include="Behaviours\Validation\IValidatorProvider.cs" />
+    <Compile Include="Behaviours\Validation\ValidatingBehaviour.cs" />
+    <Compile Include="Behaviours\Validation\ValidatorProvider.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="FoodAgregators\FoodInfoGetHandler.cs" />
     <Compile Include="Map\SuggestAddressHandler.cs" />
@@ -102,7 +108,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
