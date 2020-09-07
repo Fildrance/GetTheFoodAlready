@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
-using GetTheFoodAlready.Api.Orchestration.Reponses;
 using GetTheFoodAlready.Api.Orchestration.Requests;
+using GetTheFoodAlready.Api.Orchestration.Responses;
 
 namespace GetTheFoodAlready.Api.Orchestration
 {

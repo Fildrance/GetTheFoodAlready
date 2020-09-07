@@ -52,7 +52,7 @@ namespace GetTheFoodAlready.Handlers.RandomFoodRolling
 
 			if (vendors.Count == 0)
 			{
-				throw new InvalidOperationException("Failed to get random vendor point - empty list of vendor pointswas passed.");
+				throw new InvalidOperationException("Failed to get random vendor point - empty list of vendor points was passed.");
 			}
 
 			do

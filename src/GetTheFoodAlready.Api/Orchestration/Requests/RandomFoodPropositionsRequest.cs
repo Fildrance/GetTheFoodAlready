@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using GetTheFoodAlready.Api.Orchestration.Reponses;
+using GetTheFoodAlready.Api.Orchestration.Responses;
 using GetTheFoodAlready.Api.Support;
 
 using MediatR;
@@ -22,14 +22,14 @@ namespace GetTheFoodAlready.Api.Orchestration.Requests
 			IReadOnlyCollection<string> foodCategoryExceptions
 		)
 		{
-			AddressInfo = addressInfo ?? throw new ArgumentNullException(nameof(addressInfo));
+			AddressInfo = addressInfo;
 			AcceptableDeliveryTimeTil = acceptableDeliveryTimeTil;
-			AcceptableCuisineTypes = acceptableCuisineTypes ?? throw new ArgumentNullException(nameof(acceptableCuisineTypes));
-			AcceptablePaymentTypes = acceptablePaymentTypes ?? throw new ArgumentNullException(nameof(acceptablePaymentTypes));
+			AcceptableCuisineTypes = acceptableCuisineTypes;
+			AcceptablePaymentTypes = acceptablePaymentTypes;
 			IsSearchingOnlyFreeDeliveryMarked = isSearchingOnlyFreeDeliveryMarked;
 			MinimumOrderAmount = minimumOrderAmount;
 			RequiredRatingInfo = requiredRatingInfo;
-			FoodCategoryExceptions = foodCategoryExceptions ?? throw new ArgumentNullException(nameof(foodCategoryExceptions));
+			FoodCategoryExceptions = foodCategoryExceptions;
 		}
 
 		public AddressInfo AddressInfo { get; }

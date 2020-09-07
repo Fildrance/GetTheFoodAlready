@@ -2,7 +2,7 @@
 
 using GetTheFoodAlready.Api.FoodAgregators.Responses;
 
-namespace GetTheFoodAlready.Api.Orchestration.Reponses
+namespace GetTheFoodAlready.Api.Orchestration.Responses
 {
 	public class RandomFoodPropositionsResponse 
 	{

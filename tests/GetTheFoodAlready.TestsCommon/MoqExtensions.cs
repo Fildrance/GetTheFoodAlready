@@ -30,9 +30,11 @@ namespace GetTheFoodAlready.TestsCommon
 		    Mock.Get(subject).VerifyAll();
 	    }
 
-	    public static void DropSetup<T>(this T subject) where T : class
+	    public static Mock<T> DropSetup<T>(this T subject) where T : class
 	    {
-		    Mock.Get(subject).Reset();
+		    var setup = Mock.Get(subject);
+			setup.Reset();
+		    return setup;
 	    }
 
 	    public static void Verify<T>(this T subject, Expression<Action<T>> action, Times times = default(Times)) where T : class

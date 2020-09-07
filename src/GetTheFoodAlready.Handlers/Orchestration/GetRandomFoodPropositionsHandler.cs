@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 using GetTheFoodAlready.Api.FoodAgregators;
 using GetTheFoodAlready.Api.FoodAgregators.Requests;
-using GetTheFoodAlready.Api.Orchestration.Reponses;
 using GetTheFoodAlready.Api.Orchestration.Requests;
+using GetTheFoodAlready.Api.Orchestration.Responses;
 using GetTheFoodAlready.Handlers.RandomFoodRolling;
 
 using MediatR;
