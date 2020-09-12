@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:l="clr-namespace:GetTheFoodAlready.Ui.Wpf.Localization"
 		mc:Ignorable="d"
         Closed="MainWindow_OnClosed"
-        Title="MainWindow" Height="950" Width="1600">
+        Title="{l:Loc AppLabels/MainWindowTitle}" Height="950" Width="1600">
 	<Window.Resources>
 		<ResourceDictionary Source="Views/VisualComponentsDictionary.xaml"></ResourceDictionary>
 	</Window.Resources>
@@ -14,7 +15,7 @@
 			<RowDefinition />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		<ContentPresenter Content="{Binding CurrentViewModel}"></ContentPresenter>
+		<ContentPresenter Content="{Binding CurrentViewModel}"/>
 
 		<StatusBar Grid.Row="1">
 			<ProgressBar HorizontalAlignment="Right"

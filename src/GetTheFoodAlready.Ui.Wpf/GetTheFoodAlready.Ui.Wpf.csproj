@@ -83,6 +83,9 @@
       <HintPath>..\..\packages\MediatR.8.1.0\lib\net461\MediatR.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -129,7 +132,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Presentation">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Windows.Presentation.dll</HintPath>
     </Reference>
@@ -167,6 +169,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppConstants.cs" />
+    <Compile Include="Localization\LocExtension.cs" />
+    <Compile Include="Localization\TranslationSource.cs" />
     <Compile Include="MappingProfiles\ViewModelToSafeDefaultsMappingProfile.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Annotations1.cs" />
@@ -176,6 +180,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Registration\AppInstaller.cs" />
+    <Compile Include="Resources\AppLabels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppLabels.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\BrowserHelper.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -230,6 +239,11 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AppLabels.ru-RU.resx" />
+    <EmbeddedResource Include="Resources\AppLabels.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppLabels.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\MessageResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

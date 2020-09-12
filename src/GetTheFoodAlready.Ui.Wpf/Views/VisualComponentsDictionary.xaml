@@ -3,7 +3,7 @@
                     xmlns:vm="clr-namespace:GetTheFoodAlready.Ui.Wpf.ViewModels"
                     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
                     xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
-                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     >
 
 	<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
