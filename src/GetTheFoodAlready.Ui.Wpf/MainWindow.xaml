@@ -14,8 +14,10 @@
 		<Grid.RowDefinitions>
 			<RowDefinition />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="25"/>
 		</Grid.RowDefinitions>
-		<ContentPresenter Content="{Binding CurrentViewModel}"/>
+		
+		<ContentPresenter Content="{Binding CurrentViewModel}" Grid.Row="0"/>
 
 		<StatusBar Grid.Row="1">
 			<ProgressBar HorizontalAlignment="Right"
@@ -25,5 +27,10 @@
 			             Margin="3" />
 			<Separator />
 		</StatusBar>
+		<!-- tmp solution until custom window with settings button -->
+		<ComboBox SelectionChanged="ComboBox_SelectionChanged" Grid.Row="2" x:Name="LangComboBox">
+			<ComboBoxItem Content="en-US"/>
+			<ComboBoxItem Content="ru-RU"/>
+		</ComboBox>
 	</Grid>
 </Window>

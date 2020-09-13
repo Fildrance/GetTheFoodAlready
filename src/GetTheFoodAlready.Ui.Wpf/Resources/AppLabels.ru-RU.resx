@@ -117,7 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DeliveryPriceLabel" xml:space="preserve">
+    <value>Стоимость доставки</value>
+  </data>
+  <data name="DeliveryTimeLabel" xml:space="preserve">
+    <value>Длительность доставки</value>
+  </data>
+  <data name="IsDeliveryFreeLabel" xml:space="preserve">
+    <value>Доставка бесплатно?</value>
+  </data>
   <data name="MainWindowTitle" xml:space="preserve">
-    <value>ТАЩИ ЕДУ УЖЕ, Я БОЛЬШЕ НЕ МОГУ</value>
+    <value>ТАЩИ ЕДУ УЖЕ, Я БОЛЬШЕ НЕ МОГУ!</value>
+  </data>
+  <data name="VendorNameLabel" xml:space="preserve">
+    <value>Наименование торговой точки</value>
+  </data>
+  <data name="MinimumOrderAmountLabel" xml:space="preserve">
+    <value>Минимальный объем заказа</value>
+  </data>
+  <data name="VendorPointScoreLabel" xml:space="preserve">
+    <value>Оценка</value>
+  </data>
+  <data name="RerollButtonLabel" xml:space="preserve">
+    <value>REROLL!!</value>
+  </data>
+  <data name="SwitchListButtonLabel" xml:space="preserve">
+    <value>Полное меню/Рандомное предложение</value>
+  </data>
+  <data name="GoToVendorPage" xml:space="preserve">
+    <value>Перейти к странице точки доставки</value>
   </data>
 </root>

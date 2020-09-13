@@ -180,6 +180,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Registration\AppInstaller.cs" />
+    <Compile Include="Resources\PreparationWizardLabels.Designer.cs">
+      <DependentUpon>PreparationWizardLabels.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Resources\AppLabels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -195,6 +200,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MessageResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Support\Utilities.cs" />
     <Compile Include="Support\DefaultLocationManager.cs" />
     <Compile Include="Support\DefaultManager.cs" />
     <Compile Include="Support\ViewModelExtensions.cs" />
@@ -240,6 +246,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PreparationWizardLabels.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PreparationWizardLabels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\AppLabels.ru-RU.resx" />
     <EmbeddedResource Include="Resources\AppLabels.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -257,8 +267,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BrowserHelper.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PreparationWizardLabels.ru-RU.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ComboBoxOptions.json" />
     <Resource Include="Resources\HUNGRY_DUDE.jpg" />
     <Content Include="Resources\SetupLocationGoogleMapsDummy.html" />
     <None Include="App.config.example">

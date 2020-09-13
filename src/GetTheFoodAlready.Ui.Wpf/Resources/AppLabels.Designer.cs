@@ -61,11 +61,92 @@ namespace GetTheFoodAlready.Ui.Wpf.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GET THE FOOD ALREADY DUDE!.
+        ///   Looks up a localized string similar to Expected delivery time.
+        /// </summary>
+        internal static string DeliveryPriceLabel {
+            get {
+                return ResourceManager.GetString("DeliveryPriceLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected delivery length.
+        /// </summary>
+        internal static string DeliveryTimeLabel {
+            get {
+                return ResourceManager.GetString("DeliveryTimeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to vendor page.
+        /// </summary>
+        internal static string GoToVendorPage {
+            get {
+                return ResourceManager.GetString("GoToVendorPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is delivery free?.
+        /// </summary>
+        internal static string IsDeliveryFreeLabel {
+            get {
+                return ResourceManager.GetString("IsDeliveryFreeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GET THE FOOD ALREADY, DUDE!.
         /// </summary>
         internal static string MainWindowTitle {
             get {
                 return ResourceManager.GetString("MainWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum order.
+        /// </summary>
+        internal static string MinimumOrderAmountLabel {
+            get {
+                return ResourceManager.GetString("MinimumOrderAmountLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to REROLL!!.
+        /// </summary>
+        internal static string RerollButtonLabel {
+            get {
+                return ResourceManager.GetString("RerollButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full menu / random proposition.
+        /// </summary>
+        internal static string SwitchListButtonLabel {
+            get {
+                return ResourceManager.GetString("SwitchListButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vendor name.
+        /// </summary>
+        internal static string VendorNameLabel {
+            get {
+                return ResourceManager.GetString("VendorNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Score.
+        /// </summary>
+        internal static string VendorPointScoreLabel {
+            get {
+                return ResourceManager.GetString("VendorPointScoreLabel", resourceCulture);
             }
         }
     }

@@ -117,34 +117,94 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DeliveryPriceLabel" xml:space="preserve">
-    <value>Expected delivery time</value>
+  <data name="SetupLocationPageTitle" xml:space="preserve">
+    <value>Choose your location</value>
   </data>
-  <data name="DeliveryTimeLabel" xml:space="preserve">
-    <value>Expected delivery length</value>
+  <data name="SetupLocationPageDescription" xml:space="preserve">
+    <value>This Wizard will walk you though setting up food randomizer please go through all step.</value>
   </data>
-  <data name="IsDeliveryFreeLabel" xml:space="preserve">
-    <value>Is delivery free?</value>
+  <data name="SetupVendorPageTitle" xml:space="preserve">
+    <value>Choose your vendor point preferences</value>
   </data>
-  <data name="MainWindowTitle" xml:space="preserve">
-    <value>GET THE FOOD ALREADY, DUDE!</value>
+  <data name="SetupFoodPageTitle" xml:space="preserve">
+    <value>Choose your food preferences</value>
   </data>
-  <data name="MinimumOrderAmountLabel" xml:space="preserve">
-    <value>Minimum order</value>
+  <data name="SelectDeliveryTimeTilLabel" xml:space="preserve">
+    <value>Choose preferred time-range for delivery</value>
   </data>
-  <data name="VendorNameLabel" xml:space="preserve">
-    <value>Vendor name</value>
+  <data name="SelectCuisinesLabel" xml:space="preserve">
+    <value>Choose preferred cuisine types (empty means any allowed)</value>
   </data>
-  <data name="VendorPointScoreLabel" xml:space="preserve">
-    <value>Score</value>
+  <data name="SelectPaymentTypeLabel" xml:space="preserve">
+    <value>Choose preferred payment types (empty means any allowed)</value>
   </data>
-  <data name="RerollButtonLabel" xml:space="preserve">
-    <value>REROLL!!</value>
+  <data name="IsOnlyFreeDelieryLabel" xml:space="preserve">
+    <value>Select only out of labeled with 'free delivery'?</value>
   </data>
-  <data name="SwitchListButtonLabel" xml:space="preserve">
-    <value>Full menu / random proposition</value>
+  <data name="IsCheckingMinimumOrderAmountLabel" xml:space="preserve">
+    <value>Check vendors for minimum order amount?</value>
   </data>
-  <data name="GoToVendorPage" xml:space="preserve">
-    <value>Go to vendor page</value>
+  <data name="IsRatingImportant" xml:space="preserve">
+    <value>Is rating of vendor point of importance?</value>
+  </data>
+  <data name="SelectLocationLabel" xml:space="preserve">
+    <value>Enter your location</value>
+  </data>
+  <data name="SelectMenuPartsToExcludeLabel" xml:space="preserve">
+    <value>Choose excluded menu parts (empty means any allowed)</value>
+  </data>
+  <data name="NextButtonLabel" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="FinishButoonLabel" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="BackButtonLabel" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="MinimunOrderAmountLabel" xml:space="preserve">
+    <value>Select minimum order amount ({0})</value>
+  </data>
+  <data name="MinimunRateVoteCountLabel" xml:space="preserve">
+    <value>Select minimum amount of votes for rating ({0})</value>
+  </data>
+  <data name="MinimunRatingLabel" xml:space="preserve">
+    <value>Select minimum allowed rating ({0})</value>
+  </data>
+  <data name="AccaptableDeliveryTimeOptionLabel" xml:space="preserve">
+    <value>less then {0} minutes</value>
+  </data>
+  <data name="PaymentTypeLabelCourierCard" xml:space="preserve">
+    <value>To courier by card</value>
+  </data>
+  <data name="PaymentTypeLabelCardOnline" xml:space="preserve">
+    <value>Online by card</value>
+  </data>
+  <data name="PaymentTypeLabelAndroidPay" xml:space="preserve">
+    <value>Android-pay</value>
+  </data>
+  <data name="PaymentTypeLabelSamsungPay" xml:space="preserve">
+    <value>Samsung-pay</value>
+  </data>
+  <data name="PaymentTypeLabelApplePay" xml:space="preserve">
+    <value>Apple-pay</value>
+  </data>
+  <data name="PaymentTypeLabelSberbankSpasibo" xml:space="preserve">
+    <value>Sberbank-Spasibo</value>
+  </data>
+  <data name="CuisineTypeLabelBurger" xml:space="preserve">
+    <value>Burgers</value>
+  </data>
+  <data name="CuisineTypeLabelIndian" xml:space="preserve">
+    <value>Indian</value>
+  </data>
+  <data name="MenuPartLabelDrinks" xml:space="preserve">
+    <value>Drinks</value>
+  </data>
+  <data name="MenuPartLabelDessert" xml:space="preserve">
+    <value>Desserts</value>
+  </data>
+  <data name="MenuPartLabelSnacks" xml:space="preserve">
+    <value>Snacks</value>
   </data>
 </root>
