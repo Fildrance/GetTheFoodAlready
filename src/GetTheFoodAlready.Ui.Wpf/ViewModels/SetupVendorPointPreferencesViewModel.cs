@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper;
-
+using GetTheFoodAlready.Ui.Wpf.Localization;
+using GetTheFoodAlready.Ui.Wpf.Resources;
 using GetTheFoodAlready.Ui.Wpf.Support;
 
 using ReactiveUI;
@@ -28,12 +29,18 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 
 		#region [c-tor]
 		public SetupVendorPointPreferencesViewModel(
-			IDefaultManager<VendorPointPreferences> defaultManager, 
+			IDefaultManager<VendorPointPreferences> defaultManager,
 			IMapper mapper
 		)
 		{
 			_defaultManager = defaultManager ?? throw new ArgumentNullException(nameof(defaultManager));
 			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+
+			TranslationSource.Instance.DistinctUntilChanged()
+				.Subscribe(x => {
+					this.RaisePropertyChanged(string.Empty);
+
+				});
 		}
 		#endregion
 
@@ -41,25 +48,25 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#region [Public properties]
 		public IList<SelectBoxItem<int>> AcceptableDeliveryTimes { get; set; } = new List<SelectBoxItem<int>>
 		{
-			new SelectBoxItem<int>(15, "до 15 минут"),
-			new SelectBoxItem<int>(30, "до 30 минут"),
-			new SelectBoxItem<int>(45, "до 45 минут"),
-			new SelectBoxItem<int>(60, "до 60 минут"),
-			new SelectBoxItem<int>(90, "до 90 минут")
+			new SelectBoxItem<int>(15, () => string.Format(PreparationWizardLabels.AccaptableDeliveryTimeOptionLabel, 15), TranslationSource.Instance),
+			new SelectBoxItem<int>(30, () => string.Format(PreparationWizardLabels.AccaptableDeliveryTimeOptionLabel, 30), TranslationSource.Instance),
+			new SelectBoxItem<int>(45, () => string.Format(PreparationWizardLabels.AccaptableDeliveryTimeOptionLabel, 45), TranslationSource.Instance),
+			new SelectBoxItem<int>(60, () => string.Format(PreparationWizardLabels.AccaptableDeliveryTimeOptionLabel, 60), TranslationSource.Instance),
+			new SelectBoxItem<int>(90, () => string.Format(PreparationWizardLabels.AccaptableDeliveryTimeOptionLabel, 90), TranslationSource.Instance)
 		};
 		public IList<SelectBoxItem<string>> AvailableCuisines { get; set; } = new List<SelectBoxItem<string>>
 		{
-			new SelectBoxItem<string>("burger", "Бургеры"),
-			new SelectBoxItem<string>("indiyskaya", "Индийская"),
+			new SelectBoxItem<string>("Бургеры", () => PreparationWizardLabels.CuisineTypeLabelBurger, TranslationSource.Instance),
+			new SelectBoxItem<string>("Индийская", () => PreparationWizardLabels.CuisineTypeLabelIndian, TranslationSource.Instance),
 		};
 		public IList<SelectBoxItem<string>> AvailablePaymentTypes { get; set; } = new List<SelectBoxItem<string>>
 		{
-			new SelectBoxItem<string>("card_offline", "Картой курьеру"),
-			new SelectBoxItem<string>("card_online", "Картой предварительно"),
-			new SelectBoxItem<string>("androidpay", "Android pay"),
-			new SelectBoxItem<string>("samsungpay", "Samsung pay"),
-			new SelectBoxItem<string>("applepay", "Apple pay"),
-			new SelectBoxItem<string>("sberspasibo", "Sberbank spasibo"),
+			new SelectBoxItem<string>("card_offline", () => PreparationWizardLabels.PaymentTypeLabelCourierCard, TranslationSource.Instance),
+			new SelectBoxItem<string>("card_online", () => PreparationWizardLabels.PaymentTypeLabelCardOnline, TranslationSource.Instance),
+			new SelectBoxItem<string>("androidpay", () => PreparationWizardLabels.PaymentTypeLabelAndroidPay, TranslationSource.Instance),
+			new SelectBoxItem<string>("samsungpay", () => PreparationWizardLabels.PaymentTypeLabelSamsungPay, TranslationSource.Instance),
+			new SelectBoxItem<string>("applepay", () => PreparationWizardLabels.PaymentTypeLabelApplePay, TranslationSource.Instance),
+			new SelectBoxItem<string>("sberspasibo", () => PreparationWizardLabels.PaymentTypeLabelSberbankSpasibo, TranslationSource.Instance),
 		};
 		public bool IsMinimumOrderAmountUsed
 		{
@@ -74,7 +81,10 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		public bool IsRatingImportant
 		{
 			get => _isRatingImportant;
-			set => this.RaiseAndSetIfChanged(ref _isRatingImportant, value);
+			set 
+			{
+				this.RaiseAndSetIfChanged(ref _isRatingImportant, value);
+			}
 		}
 		public int? MinimumOrderAmount
 		{
@@ -103,9 +113,10 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 				this.RaisePropertyChanged(nameof(MinimunRateVoteCountLabel));
 			}
 		}
-		public string MinimunOrderAmountLabel => $"Select minimum order amount ({MinimumOrderAmount})";
-		public string MinimunRateVoteCountLabel => $"Select minimum amount of votes for rating ({MinimumRateVoteCount})";
-		public string MinimunRatingLabel => $"Select minimum allowed rating ({MinimumRaiting:F1})";
+
+		public string MinimunOrderAmountLabel => string.Format(PreparationWizardLabels.IsRatingImportant, MinimumOrderAmount);
+		public string MinimunRateVoteCountLabel => string.Format(PreparationWizardLabels.MinimunRateVoteCountLabel, MinimumRateVoteCount);
+		public string MinimunRatingLabel => string.Format(PreparationWizardLabels.MinimunRatingLabel, MinimumRaiting?.ToString("F1"));
 		public int? SelectedAcceptableDeliveryTimeTil
 		{
 			get => _selectedAcceptableDeliveryTimeTil;
@@ -116,22 +127,12 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#region [Public methods]
 		public IReadOnlyCollection<string> GetSelectedCuisines()
 		{
-			var items = AvailableCuisines.Where(x => x.IsSelected)
-				.ToArray();
-			return items.Any()
-				? items.Select(x => x.Text)
-					.ToArray()
-				: Array.Empty<string>();
+			return Utilities.GetSelectedValues(AvailableCuisines);
 		}
 
 		public IReadOnlyCollection<string> GetSelectedPaymentTypes()
 		{
-			var items = AvailablePaymentTypes.Where(x => x.IsSelected)
-				.ToArray();
-			return items.Any()
-				? items.Select(x => x.Value)
-					.ToArray()
-				: Array.Empty<string>();
+			return Utilities.GetSelectedValues(AvailablePaymentTypes);
 		}
 
 		public async Task<SetupVendorPointPreferencesViewModel> SetupDefault()

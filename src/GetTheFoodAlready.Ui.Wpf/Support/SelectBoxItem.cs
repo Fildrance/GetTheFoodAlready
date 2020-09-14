@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 using GetTheFoodAlready.Ui.Wpf.Annotations;
@@ -11,13 +13,27 @@ namespace GetTheFoodAlready.Ui.Wpf.Support
 	{
 		#region [Fields]
 		private bool _isSelected;
+		private Func<string> _textFactory;
+		private readonly string _text;
 		#endregion
 
 		#region [c-tor]
 		public SelectBoxItem(TValue value, string text)
 		{
+			if (string.IsNullOrEmpty(text))
+			{
+				throw new ArgumentNullException(text);
+			}
+
 			Value = value;
-			Text = text;
+			_text = text;
+		}
+		public SelectBoxItem(TValue value, Func<string> textFactory, IObservable<CultureInfo> textChanged)
+		{
+			Value = value;
+			_textFactory = textFactory ?? throw new ArgumentNullException(nameof(textFactory));
+
+			textChanged.Subscribe(x => OnPropertyChanged(nameof(Text)));
 		}
 		#endregion
 
@@ -36,8 +52,13 @@ namespace GetTheFoodAlready.Ui.Wpf.Support
 				OnPropertyChanged();
 			}
 		}
-		public string Text { get; }
-
+		public string Text 
+		{ 
+			get 
+			{
+				return _text ?? _textFactory();
+			}
+		}
 		public TValue Value { get; }
 		#endregion
 		#endregion

@@ -1,20 +1,39 @@
-﻿<Window x:Class="GetTheFoodAlready.Ui.Wpf.MainWindow"
+﻿<mah:MetroWindow x:Class="GetTheFoodAlready.Ui.Wpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:l="clr-namespace:GetTheFoodAlready.Ui.Wpf.Localization"
+		xmlns:vm="clr-namespace:GetTheFoodAlready.Ui.Wpf.ViewModels"
+		xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
 		mc:Ignorable="d"
         Closed="MainWindow_OnClosed"
-        Title="MainWindow" Height="950" Width="1600">
+        Title="{l:Loc AppLabels/MainWindowTitle}" Height="950" Width="1600"
+		d:DataContext="{d:DesignInstance vm:MainViewModel}">
+	<mah:MetroWindow.RightWindowCommands>
+		<mah:WindowCommands HorizontalAlignment="Right">
+			<ComboBox ItemsSource="{Binding AvailableCultures}" SelectedItem="{Binding SelectedCulture}" x:Name="LangComboBox" Width="60">
+				<ComboBox.Resources>
+					<ResourceDictionary Source="Views/TransparentComboBox.xaml" />
+				</ComboBox.Resources>
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<Image Stretch="Fill" Height="32" Width="32" Source="{Binding Text}"/>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+		</mah:WindowCommands>
+	</mah:MetroWindow.RightWindowCommands>
 	<Window.Resources>
-		<ResourceDictionary Source="Views/VisualComponentsDictionary.xaml"></ResourceDictionary>
+		<ResourceDictionary Source="Views/VisualComponentsDictionary.xaml"/>
 	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition />
-			<RowDefinition Height="Auto" />
+			<RowDefinition Height="25"/>
 		</Grid.RowDefinitions>
-		<ContentPresenter Content="{Binding CurrentViewModel}"></ContentPresenter>
+		
+		<ContentPresenter Content="{Binding CurrentViewModel}" Grid.Row="0"/>
 
 		<StatusBar Grid.Row="1">
 			<ProgressBar HorizontalAlignment="Right"
@@ -25,4 +44,4 @@
 			<Separator />
 		</StatusBar>
 	</Grid>
-</Window>
+</mah:MetroWindow>

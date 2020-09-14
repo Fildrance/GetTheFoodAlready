@@ -71,6 +71,9 @@
     <Reference Include="Castle.Windsor, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Windsor.5.0.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ControlzEx.4.3.2\lib\net462\ControlzEx.dll</HintPath>
+    </Reference>
     <Reference Include="CrashReporter.NET, Version=1.5.8.0, Culture=neutral, PublicKeyToken=7828e0fd88cab698, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CrashReporter.NET.Official.1.5.8\lib\net462\CrashReporter.NET.dll</HintPath>
       <Private>True</Private>
@@ -79,9 +82,15 @@
       <HintPath>..\..\packages\DynamicData.6.16.2\lib\net461\DynamicData.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MahApps.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=51482d6f650b2b3f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MahApps.Metro.2.2.0\lib\net47\MahApps.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="MediatR, Version=8.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MediatR.8.1.0\lib\net461\MediatR.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -103,6 +112,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.IO.Compression" />
@@ -127,9 +137,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Presentation">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Windows.Presentation.dll</HintPath>
     </Reference>
@@ -167,6 +177,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppConstants.cs" />
+    <Compile Include="Localization\LocExtension.cs" />
+    <Compile Include="Localization\TranslationSource.cs" />
     <Compile Include="MappingProfiles\ViewModelToSafeDefaultsMappingProfile.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Annotations1.cs" />
@@ -176,6 +188,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Registration\AppInstaller.cs" />
+    <Compile Include="Resources\PreparationWizardLabels.Designer.cs">
+      <DependentUpon>PreparationWizardLabels.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\AppLabels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppLabels.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\BrowserHelper.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -186,6 +208,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MessageResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Support\Utilities.cs" />
     <Compile Include="Support\DefaultLocationManager.cs" />
     <Compile Include="Support\DefaultManager.cs" />
     <Compile Include="Support\ViewModelExtensions.cs" />
@@ -213,6 +236,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\TransparentComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\VisualComponentsDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -231,6 +258,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PreparationWizardLabels.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PreparationWizardLabels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AppLabels.ru-RU.resx" />
+    <EmbeddedResource Include="Resources\AppLabels.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppLabels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\MessageResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MessageResources.Designer.cs</LastGenOutput>
@@ -243,9 +279,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BrowserHelper.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PreparationWizardLabels.ru-RU.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ComboBoxOptions.json" />
     <Resource Include="Resources\HUNGRY_DUDE.jpg" />
+    <Resource Include="Resources\Flags\ru-RU.png" />
+    <Resource Include="Resources\Flags\en-US.png" />
     <Content Include="Resources\SetupLocationGoogleMapsDummy.html" />
     <None Include="App.config.example">
       <SubType>Designer</SubType>

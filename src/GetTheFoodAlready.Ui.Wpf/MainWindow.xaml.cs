@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows;
-
 using GetTheFoodAlready.Ui.Wpf.ViewModels;
+using MahApps.Metro.Controls;
 
 namespace GetTheFoodAlready.Ui.Wpf
 {
-	public partial class MainWindow : Window
+	public partial class MainWindow : MetroWindow
 	{
 		private readonly MainViewModel _viewModel;
 

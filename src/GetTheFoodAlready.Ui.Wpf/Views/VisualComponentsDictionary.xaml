@@ -3,7 +3,8 @@
                     xmlns:vm="clr-namespace:GetTheFoodAlready.Ui.Wpf.ViewModels"
                     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
                     xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
-                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+					xmlns:l="clr-namespace:GetTheFoodAlready.Ui.Wpf.Localization"
                     >
 
 	<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
@@ -16,27 +17,26 @@
 		</DataTemplate.Resources>
 		<StackPanel>
 			<StackPanel Margin="5 0 5 8">
-				<Label>Vendor</Label>
+				<Label Content="{l:Loc AppLabels/VendorNameLabel}"/>
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.DisplayName}"></TextBox>
 
-				<Label>Delivery price</Label>
+				<Label Content="{l:Loc AppLabels/DeliveryPriceLabel}"/>
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryPrice}"></TextBox>
 
-				<Label>Delivery time</Label>
+				<Label Content="{l:Loc AppLabels/DeliveryTimeLabel}"/>
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.DeliveryTime}"></TextBox>
 
-				<Label>Is delivery free?</Label>
+				<Label Content="{l:Loc AppLabels/IsDeliveryFreeLabel}"/>
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.IsDeliveringForFree}"></TextBox>
 
-				<Label>Score</Label>
+				<Label Content="{l:Loc AppLabels/VendorPointScoreLabel}"/>
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.Score}"></TextBox>
 
-				<Label>Minimum order</Label>
+				<Label Content="{l:Loc AppLabels/MinimumOrderAmountLabel}"/>
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.MinOrderTotal}"></TextBox>
-
 			</StackPanel>
 			
-			<DataGrid ItemsSource="{Binding FoodItems}" Height="500" IsReadOnly="True" AutoGenerateColumns="False">
+			<DataGrid ItemsSource="{Binding FoodItems}" Height="450" IsReadOnly="True" AutoGenerateColumns="False">
 				<DataGrid.Columns>
 					<DataGridTextColumn Width="2*" Binding="{Binding ProductName}" Header="Name" />
 					<DataGridTextColumn Width="6*" Binding="{Binding Description}" Header="Description" />
@@ -47,23 +47,30 @@
 
 			<Grid Height="80">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition></ColumnDefinition>
-					<ColumnDefinition></ColumnDefinition>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
-					<RowDefinition ></RowDefinition>
-					<RowDefinition></RowDefinition>
+					<RowDefinition/>
+					<RowDefinition/>
 				</Grid.RowDefinitions>
-				<Button Content="REROLL!" Command="{Binding GetRandomFoodCommand}" Grid.Column="1" Grid.Row="0" />
-				<Button Content="Switch list" Command="{Binding SwitchFoodList}" Grid.Column="0" Grid.Row="0"/>
-				<Button Content="GO TO VENDOR PAGE" Command="{Binding GoToVendorPage}" Grid.Column="0" Grid.Row="1"></Button>
+
+				<Button Content="{l:Loc AppLabels/RerollButtonLabel}" Command="{Binding GetRandomFoodCommand}" Grid.Column="1" Grid.Row="0" />
+				<Button Content="{l:Loc AppLabels/SwitchListButtonLabel}" Command="{Binding SwitchFoodList}" Grid.Column="0" Grid.Row="0"/>
+				<Button Content="{l:Loc AppLabels/GoToVendorPage}" Command="{Binding GoToVendorPage}" Grid.Column="0" Grid.Row="1"></Button>
 			</Grid>
 
 		</StackPanel>
 	</DataTemplate>
 
 	<DataTemplate DataType="{x:Type vm:PreparationWizardViewModel}" x:Name="WizardTemplate">
-		<xctk:Wizard FinishButtonClosesWindow="False">
+		<xctk:Wizard 
+			FinishButtonClosesWindow="False" 
+			HelpButtonVisibility="Hidden"
+			NextButtonContent="{l:Loc PreparationWizardLabels/NextButtonLabel}" 
+			FinishButtonContent="{l:Loc PreparationWizardLabels/FinishButoonLabel}" 
+			CancelButtonContent="{l:Loc PreparationWizardLabels/CancelButtonLabel}"
+			BackButtonContent="{l:Loc PreparationWizardLabels/BackButtonLabel}">
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="Finish">
 					<i:InvokeCommandAction Command="{Binding FinishCommand}" />
@@ -71,8 +78,8 @@
 			</i:Interaction.Triggers>
 
 			<xctk:WizardPage x:Name="SetupLocation"
-			                 Title="Choose your location"
-			                 Description="This Wizard will walk you though setting up food randomizer please go through all steps, or click 'Finish' if you already have."
+			                 Title="{l:Loc PreparationWizardLabels/SetupLocationPageTitle}" 
+			                 Description="{l:Loc PreparationWizardLabels/SetupLocationPageDescription}"
 			                 NextPage="{Binding ElementName=SetupVendorPointPreferences}"
 							 CanSelectNextPage="{Binding SetupLocationViewModel.CanGoNext}"
 			                 NextButtonVisibility="Visible">
@@ -84,15 +91,14 @@
 
 			<xctk:WizardPage x:Name="SetupVendorPointPreferences"
 			                 PageType="Interior"
-			                 Title="Choose your vendor point preferences"
+			                 Title="{l:Loc PreparationWizardLabels/SetupVendorPageTitle}"
 			                 NextPage="{Binding ElementName=SetupFoodPreferences}"
 			                 PreviousPage="{Binding ElementName=Interior}">
 				<ContentPresenter Content="{Binding SetupVendorPointPreferencesViewModel}" />
 			</xctk:WizardPage>
 
 			<xctk:WizardPage x:Name="SetupFoodPreferences" PageType="Interior"
-			                 Title="Choose your food preferences"
-			                 Description="Finish config ."
+			                 Title="{l:Loc PreparationWizardLabels/SetupFoodPageTitle}"
 			                 PreviousPage="{Binding ElementName=SetupVendorPointPreferences}"
 			                 FinishButtonVisibility="Visible"
 			                 CanFinish="True">
@@ -109,7 +115,7 @@
 				<RowDefinition Height="34" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
-			<Label Content="Enter your location" Grid.Row="0" />
+			<Label Content="{l:Loc PreparationWizardLabels/SelectLocationLabel}" Grid.Row="0" />
 			<ComboBox Text="{Binding Location}"
 			          ItemsSource="{Binding LocationPropositions}"
 			          IsDropDownOpen="{Binding IsPropositionsListOpen}"
@@ -125,34 +131,33 @@
 	<DataTemplate DataType="{x:Type vm:SetupVendorPointPreferencesViewModel}">
 		<StackPanel Width="600" HorizontalAlignment="Left">
 
-			<Label Content="Choose preferred time-range for delivery" />
+			<Label Content="{l:Loc PreparationWizardLabels/SelectDeliveryTimeTilLabel}" />
 			<ComboBox
 					SelectedValuePath="Value"
 					SelectedValue="{Binding SelectedAcceptableDeliveryTimeTil}"
 			        ItemsSource="{Binding AcceptableDeliveryTimes}"
 			        DisplayMemberPath="Text" />
 
-			<Label Content="Choose preferred cuisine types (empty means any allowed)" />
+			<Label Content="{l:Loc PreparationWizardLabels/SelectCuisinesLabel}" />
 			<xctk:CheckComboBox x:Name="CuisineSelect"
 			                    DisplayMemberPath="Text"
 			                    ItemsSource="{Binding AvailableCuisines}" 
 			                    SelectedMemberPath="IsSelected"/>
 
-			<Label Content="Choose preferred payment types (empty means any allowed)" />
+			<Label Content="{l:Loc PreparationWizardLabels/SelectPaymentTypeLabel}" />
 			<xctk:CheckComboBox x:Name="PaymentTypeSelect"
 			                    DisplayMemberPath="Text"
 			                    ItemsSource="{Binding AvailablePaymentTypes}" 
-								SelectedMemberPath="IsSelected"
-			                    />
+								SelectedMemberPath="IsSelected"/>
 
 			<Border Height="40" >
 				<CheckBox IsChecked="{Binding IsOnlyFreeDelivery, Mode=TwoWay}"
-				          Content="Select only out of labeled with 'free delivery'?"
+				          Content="{l:Loc PreparationWizardLabels/IsOnlyFreeDelieryLabel}"
 				          HorizontalContentAlignment="Left" VerticalAlignment="Center" />
 			</Border>
 			<Border Height="40" >
 				<CheckBox IsChecked="{Binding IsMinimumOrderAmountUsed, Mode=TwoWay}"
-				          Content="Check vendors for minimum order amount?"
+				          Content="{l:Loc PreparationWizardLabels/IsCheckingMinimumOrderAmountLabel}"
 				          HorizontalContentAlignment="Left" VerticalAlignment="Center" />
 			</Border>
 			<Label Content="{Binding MinimunOrderAmountLabel}"  Visibility="{Binding IsMinimumOrderAmountUsed, Converter={StaticResource VisibleIfTrueConverter}}"/>
@@ -164,7 +169,7 @@
 
 			<Border Height="40" >
 				<CheckBox IsChecked="{Binding IsRatingImportant, Mode=TwoWay}"
-				          Content="Is rating of vendor point of importance?"
+				          Content="{l:Loc PreparationWizardLabels/IsRatingImportant}"
 				          HorizontalContentAlignment="Left" VerticalAlignment="Center" />
 			</Border>
 
@@ -189,7 +194,7 @@
 
 	<DataTemplate DataType="{x:Type vm:SetupFoodPreferencesViewModel}" >
 		<StackPanel Width="800" HorizontalAlignment="Left">
-			<Label Content="Choose excluded menu parts (empty means any allowed)" />
+			<Label Content="{l:Loc PreparationWizardLabels/SelectMenuPartsToExcludeLabel}" />
 			<xctk:CheckComboBox x:Name="PaymentTypeSelect"
 			                    DisplayMemberPath="Text"
 								SelectedMemberPath="IsSelected"

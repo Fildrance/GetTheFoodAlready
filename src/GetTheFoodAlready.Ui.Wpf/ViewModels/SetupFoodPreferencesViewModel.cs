@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper;
-
+using GetTheFoodAlready.Ui.Wpf.Localization;
+using GetTheFoodAlready.Ui.Wpf.Resources;
 using GetTheFoodAlready.Ui.Wpf.Support;
 
 using ReactiveUI;
@@ -30,21 +30,16 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#region [Public properties]
 		public IList<SelectBoxItem<string>> AvailableToExcludeMenuParts { get; set; } = new List<SelectBoxItem<string>>
 		{
-			new SelectBoxItem<string>("Напитки", "Напитки"),
-			new SelectBoxItem<string>("Дессерты", "Дессерты"),
-			new SelectBoxItem<string>("Закуски", "Закуски")
+			new SelectBoxItem<string>("Напитки", () => PreparationWizardLabels.MenuPartLabelDrinks, TranslationSource.Instance),
+			new SelectBoxItem<string>("Дессерты", () => PreparationWizardLabels.MenuPartLabelDessert, TranslationSource.Instance),
+			new SelectBoxItem<string>("Закуски", () => PreparationWizardLabels.MenuPartLabelSnacks, TranslationSource.Instance)
 		};
 		#endregion
 
 		#region [Public methods]
 		public IReadOnlyCollection<string> GetExcludedMenuParts()
 		{
-			var items = AvailableToExcludeMenuParts.Where(x => x.IsSelected)
-				.ToArray();
-			return items.Any()
-				? items.Select(x => x.Value)
-					.ToArray()
-				: Array.Empty<string>();
+			return Utilities.GetSelectedValues(AvailableToExcludeMenuParts);
 		}
 
 		public void SaveDefault()

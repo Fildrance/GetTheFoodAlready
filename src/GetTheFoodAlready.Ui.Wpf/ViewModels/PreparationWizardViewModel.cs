@@ -39,8 +39,8 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 				{
 					ratingInfo = new RatingInfo
 					(
-						SetupVendorPointPreferencesViewModel.MinimumRaiting.Value,
-						SetupVendorPointPreferencesViewModel.MinimumRateVoteCount.Value
+						SetupVendorPointPreferencesViewModel.MinimumRaiting ?? 0,
+						SetupVendorPointPreferencesViewModel.MinimumRateVoteCount ?? 0
 					);
 				}
 
