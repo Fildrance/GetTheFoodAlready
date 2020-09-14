@@ -207,4 +207,7 @@
   <data name="MenuPartLabelSnacks" xml:space="preserve">
     <value>Snacks</value>
   </data>
+  <data name="CancelButtonLabel" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

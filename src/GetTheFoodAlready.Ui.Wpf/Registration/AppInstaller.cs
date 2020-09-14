@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ using GetTheFoodAlready.Api.Registration;
 using GetTheFoodAlready.Api.Support;
 using GetTheFoodAlready.Handlers;
 using GetTheFoodAlready.Handlers.Registration;
+using GetTheFoodAlready.Ui.Wpf.Localization;
 using GetTheFoodAlready.Ui.Wpf.MappingProfiles;
 using GetTheFoodAlready.Ui.Wpf.Support;
 using GetTheFoodAlready.Ui.Wpf.ViewModels;
@@ -30,29 +32,33 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 	{
 		private static readonly ILogger Logger = LogManager.GetLogger(typeof(App).FullName);
 
+		public readonly static string[] SupportedCultures = new[] { "ru-RU", "en-US" };
+
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
-			var reportCrashInstance = CreateReportCrashInstance();
-
 			var googleApiKey = ConfigurationManager.AppSettings["googleApiKey"];
 
 			container.Register(
+				// view-models
 				Component.For<MainWindow>().ImplementedBy<MainWindow>().LifestyleSingleton(),
-
 				Component.For<MainViewModel>().ImplementedBy<MainViewModel>().LifestyleSingleton(),
-
-				Component.For<Profile>().ImplementedBy<ViewModelToSafeDefaultsMappingProfile>(),
-				Component.For<ReportCrash>().Instance(reportCrashInstance).LifestyleSingleton(),
 				Component.For<SetupLocationViewModel>().ImplementedBy<SetupLocationViewModel>().LifestyleSingleton()
 					.DependsOn(Dependency.OnValue("googleApiKey", googleApiKey))
 					.OnCreate(async x => await x.SetupObservables().SetupDefaultLocation()),
 				Component.For<PreparationWizardViewModel>().ImplementedBy<PreparationWizardViewModel>().LifestyleSingleton(),
 				Component.For<FoodsListViewModel>().ImplementedBy<FoodsListViewModel>().LifestyleSingleton(),
-				Component.For<SetupVendorPointPreferencesViewModel> ().ImplementedBy<SetupVendorPointPreferencesViewModel>().LifestyleSingleton()
+				Component.For<SetupVendorPointPreferencesViewModel>().ImplementedBy<SetupVendorPointPreferencesViewModel>().LifestyleSingleton()
 					.OnCreate(async x => await x.SetupDefault()),
-				Component.For<SetupFoodPreferencesViewModel> ().ImplementedBy<SetupFoodPreferencesViewModel>().LifestyleSingleton()
+				Component.For<SetupFoodPreferencesViewModel>().ImplementedBy<SetupFoodPreferencesViewModel>().LifestyleSingleton()
 					.OnCreate(async x => await x.SetupDefaults()),
 
+				// mappings
+				Component.For<Profile>().ImplementedBy<ViewModelToSafeDefaultsMappingProfile>(),
+				// infrastructure
+				Component.For<ReportCrash>().Instance(CreateReportCrashInstance()),
+				Component.For<TranslationSource>().Instance(CreateTranslationSource()),
+
+				// mediatr
 				Component.For<IMediator>().ImplementedBy<Mediator>(),
 				Component.For<IDefaultManager<AddressInfo>>().ImplementedBy<DefaultLocationManager>().LifestyleSingleton(),
 				Component.For(typeof(IDefaultManager<>)).ImplementedBy(typeof(DefaultManager<>)).LifestyleSingleton(),
@@ -74,6 +80,15 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 			);
 		}
 
+		private TranslationSource CreateTranslationSource()
+		{
+			var cultures = SupportedCultures.Select(c => new CultureInfo(c))
+				.ToArray();
+			var defaultCulture = cultures.First(x => x.Name == "en-US");
+			TranslationSource.Instance = new TranslationSource(cultures, defaultCulture);
+			return TranslationSource.Instance;
+		}
+
 		private static ReportCrash CreateReportCrashInstance()
 		{
 			var reportCrashInstance = new ReportCrash("fildrance@gmail.com")
@@ -87,6 +102,7 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 
 			return reportCrashInstance;
 		}
+
 		private static void HandleException(Exception exception, ReportCrash reportCrashInstance)
 		{
 			var loggerName = exception?.Data[Constants.LoggerToBeUsed] as string;

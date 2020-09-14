@@ -79,6 +79,15 @@ namespace GetTheFoodAlready.Ui.Wpf.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        internal static string CancelButtonLabel {
+            get {
+                return ResourceManager.GetString("CancelButtonLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Burgers.
         /// </summary>
         internal static string CuisineTypeLabelBurger {

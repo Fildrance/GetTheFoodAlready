@@ -36,7 +36,7 @@
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.MinOrderTotal}"></TextBox>
 			</StackPanel>
 			
-			<DataGrid ItemsSource="{Binding FoodItems}" Height="500" IsReadOnly="True" AutoGenerateColumns="False">
+			<DataGrid ItemsSource="{Binding FoodItems}" Height="450" IsReadOnly="True" AutoGenerateColumns="False">
 				<DataGrid.Columns>
 					<DataGridTextColumn Width="2*" Binding="{Binding ProductName}" Header="Name" />
 					<DataGridTextColumn Width="6*" Binding="{Binding Description}" Header="Description" />
@@ -69,6 +69,7 @@
 			HelpButtonVisibility="Hidden"
 			NextButtonContent="{l:Loc PreparationWizardLabels/NextButtonLabel}" 
 			FinishButtonContent="{l:Loc PreparationWizardLabels/FinishButoonLabel}" 
+			CancelButtonContent="{l:Loc PreparationWizardLabels/CancelButtonLabel}"
 			BackButtonContent="{l:Loc PreparationWizardLabels/BackButtonLabel}">
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="Finish">
