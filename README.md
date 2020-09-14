@@ -18,6 +18,7 @@ This application server two purposes:
  * CefSharp is used due to original idea of showing parts of delivery service site in frames (which plenty of sites won't like with web-app and usual frame, due to security reasons). CefSharp on the other hand is Chromium, so no possible problems with such things. It also was later discovered that there is no wpf control for google maps : ) so CefSharp was also useful this way.
  * DaData is just service that knows a lot about addresses, buildings etc in Russian Federation. Can easily help with autocompleting address.
  * Nlog is used for basic profiling - can write to csv and later it will be easy to analyse.
+ * Localization in wpf by default only supports choosing optimal locale by machine locale and changing locale by re-launching application. Some small hacks and xaml extension, coupled with very cute-styled combo-box enables changing locale on the run.
 
 
 ## How to launch
