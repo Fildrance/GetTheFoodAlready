@@ -48,7 +48,7 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 				Component.For<PreparationWizardViewModel>().ImplementedBy<PreparationWizardViewModel>().LifestyleSingleton(),
 				Component.For<FoodsListViewModel>().ImplementedBy<FoodsListViewModel>().LifestyleSingleton(),
 				Component.For<SetupVendorPointPreferencesViewModel>().ImplementedBy<SetupVendorPointPreferencesViewModel>().LifestyleSingleton()
-					.OnCreate(async x => await x.SetupDefault()),
+					.OnCreate(async (kernel, x) => await x.Setup(kernel.Resolve<SetupLocationViewModel>())),
 				Component.For<SetupFoodPreferencesViewModel>().ImplementedBy<SetupFoodPreferencesViewModel>().LifestyleSingleton()
 					.OnCreate(async x => await x.SetupDefaults()),
 
@@ -75,7 +75,7 @@ namespace GetTheFoodAlready.Ui.Wpf.Registration
 				}))
 			);
 			container.Install(
-				new GetTheFoodAlreadyApiInstaller(), 
+				new GetTheFoodAlreadyApiInstaller(),
 				new GetTheFoodAlreadyHandlersInstaller()
 			);
 		}
