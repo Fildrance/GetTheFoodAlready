@@ -56,6 +56,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -69,6 +70,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\MemoryCacheManager.cs" />
+    <Compile Include="Cache\ICacheManagerFactory.cs" />
+    <Compile Include="Cache\ICacheManager.cs" />
+    <Compile Include="Cache\MemoryCacheManagerFactory.cs" />
     <Compile Include="FoodAgregators\Requests\FoodInfoGetRequest.cs" />
     <Compile Include="FoodAgregators\Requests\Validation\ClosestVendorPointsGetRequestValidator.cs" />
     <Compile Include="FoodAgregators\Responses\FoodInfoGetResponse.cs" />
