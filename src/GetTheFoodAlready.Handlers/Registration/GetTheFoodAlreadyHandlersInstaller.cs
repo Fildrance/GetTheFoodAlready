@@ -63,8 +63,9 @@ namespace GetTheFoodAlready.Handlers.Registration
 					var profiles = x.ResolveAll<Profile>();
 					return new MapperConfiguration(c => c.AddProfiles(profiles));
 				}),
-				
+
 				// delivery client
+				Component.For<IDeliveryClubClient>().ImplementedBy<CachingDeliveryClubClientDecorator>().LifestyleSingleton(),
 				Component.For<IDeliveryClubClient>().ImplementedBy<AutoRetryingDeliveryClubClientDecorator>().DependsOn(retryCount).LifestyleSingleton(),
 				Component.For<IDeliveryClubClient>().ImplementedBy<AutoLoginningDeliveryClubClientDecorator>().LifestyleSingleton(),
 				Component.For<IDeliveryClubClient>().ImplementedBy<DeliveryClubClient>().LifestyleSingleton(),

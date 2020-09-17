@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
@@ -59,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Client\AutoLoginningDeliveryClubClientDecorator.cs" />
     <Compile Include="Client\AutoRetryingDeliveryClubClientDecorator.cs" />
+    <Compile Include="Client\Caching DeliveryClubClientDecorator.cs" />
     <Compile Include="DeliveryClubClientSettings.cs" />
     <Compile Include="DeliveryClubConstants.cs" />
     <Compile Include="DataTypes\DeliveryClubVendor.cs" />

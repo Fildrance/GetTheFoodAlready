@@ -14,7 +14,7 @@ using GetTheFoodAlready.DeliveryClubBridge.Tests.Support;
 
 using NUnit.Framework;
 
-namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Unit
+namespace GetTheFoodAlready.DeliveryClubBridge.Tests.Unit.Client
 {
 	[ExcludeFromCodeCoverage, TestFixture, Category("Unit")]
 	public class DeliveryClubClientTests
