@@ -210,4 +210,7 @@
   <data name="CancelButtonLabel" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="BusyIndicatorContent" xml:space="preserve">
+    <value>Please wait...</value>
+  </data>
 </root>

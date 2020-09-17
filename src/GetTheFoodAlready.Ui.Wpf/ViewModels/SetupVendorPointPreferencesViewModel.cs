@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using AutoMapper;
+using GetTheFoodAlready.Api.FoodAgregators;
+using GetTheFoodAlready.Api.FoodAgregators.Requests;
 using GetTheFoodAlready.Ui.Wpf.Localization;
 using GetTheFoodAlready.Ui.Wpf.Resources;
 using GetTheFoodAlready.Ui.Wpf.Support;
@@ -17,7 +21,9 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		#region [Fields]
 		private readonly IDefaultManager<VendorPointPreferences> _defaultManager;
 		private readonly IMapper _mapper;
+		private readonly IDeliveryClubService _deliveryClubService;
 
+		private IList<SelectBoxItem<string>> _availableCuisines;
 		private bool _isMinimumOrderAmountUsed;
 		private bool _isOnlyFreeDelivery;
 		private bool _isRatingImportant;
@@ -25,22 +31,22 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		private decimal? _minimumRaiting;
 		private int? _minimumRateVoteCount;
 		private int? _selectedAcceptableDeliveryTimeTil;
+		private bool _isReady;
 		#endregion
 
 		#region [c-tor]
 		public SetupVendorPointPreferencesViewModel(
 			IDefaultManager<VendorPointPreferences> defaultManager,
-			IMapper mapper
+			IMapper mapper,
+			IDeliveryClubService deliveryClubService
 		)
 		{
 			_defaultManager = defaultManager ?? throw new ArgumentNullException(nameof(defaultManager));
 			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+			_deliveryClubService = deliveryClubService ?? throw new ArgumentNullException(nameof(deliveryClubService));
 
 			TranslationSource.Instance.DistinctUntilChanged()
-				.Subscribe(x => {
-					this.RaisePropertyChanged(string.Empty);
-
-				});
+				.Subscribe(x => this.RaisePropertyChanged(string.Empty));
 		}
 		#endregion
 
@@ -54,11 +60,11 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			new SelectBoxItem<int>(60, () => string.Format(PreparationWizardLabels.AccaptableDeliveryTimeOptionLabel, 60), TranslationSource.Instance),
 			new SelectBoxItem<int>(90, () => string.Format(PreparationWizardLabels.AccaptableDeliveryTimeOptionLabel, 90), TranslationSource.Instance)
 		};
-		public IList<SelectBoxItem<string>> AvailableCuisines { get; set; } = new List<SelectBoxItem<string>>
+		public IList<SelectBoxItem<string>> AvailableCuisines
 		{
-			new SelectBoxItem<string>("Бургеры", () => PreparationWizardLabels.CuisineTypeLabelBurger, TranslationSource.Instance),
-			new SelectBoxItem<string>("Индийская", () => PreparationWizardLabels.CuisineTypeLabelIndian, TranslationSource.Instance),
-		};
+			get => _availableCuisines;
+			set => this.RaiseAndSetIfChanged(ref _availableCuisines, value);
+		}
 		public IList<SelectBoxItem<string>> AvailablePaymentTypes { get; set; } = new List<SelectBoxItem<string>>
 		{
 			new SelectBoxItem<string>("card_offline", () => PreparationWizardLabels.PaymentTypeLabelCourierCard, TranslationSource.Instance),
@@ -81,7 +87,7 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 		public bool IsRatingImportant
 		{
 			get => _isRatingImportant;
-			set 
+			set
 			{
 				this.RaiseAndSetIfChanged(ref _isRatingImportant, value);
 			}
@@ -113,6 +119,16 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 				this.RaisePropertyChanged(nameof(MinimunRateVoteCountLabel));
 			}
 		}
+		public bool IsBusy
+		{
+			get => _isReady;
+			set
+			{
+				this.RaiseAndSetIfChanged(ref _isReady, value);
+				this.RaisePropertyChanged(nameof(IsReady));
+			}
+		}
+		public bool IsReady { get => !_isReady; }
 
 		public string MinimunOrderAmountLabel => string.Format(PreparationWizardLabels.IsRatingImportant, MinimumOrderAmount);
 		public string MinimunRateVoteCountLabel => string.Format(PreparationWizardLabels.MinimunRateVoteCountLabel, MinimumRateVoteCount);
@@ -135,10 +151,24 @@ namespace GetTheFoodAlready.Ui.Wpf.ViewModels
 			return Utilities.GetSelectedValues(AvailablePaymentTypes);
 		}
 
-		public async Task<SetupVendorPointPreferencesViewModel> SetupDefault()
+		public async Task<SetupVendorPointPreferencesViewModel> Setup(SetupLocationViewModel previousPageViewModel)
 		{
+			IsBusy = true;
+			var request = new ClosestVendorPointsGetRequest
+			{
+				Latitude = previousPageViewModel.SelectedLocation.Latitude,
+				Longitude = previousPageViewModel.SelectedLocation.Longitude
+			};
+			var requestResult = await _deliveryClubService.GetClosestVendorPoints(request, CancellationToken.None);
+
+			var foundCuisines = requestResult.Vendors.SelectMany(x => x.Cuisines)
+				.Distinct();
+			AvailableCuisines = foundCuisines.Select(x => new SelectBoxItem<string>(x, x))
+				.ToArray();
+
 			var defaults = await _defaultManager.GetDefault();
 			_mapper.Map(defaults, this);
+			IsBusy = false;
 			return this;
 		}
 

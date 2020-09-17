@@ -79,6 +79,15 @@ namespace GetTheFoodAlready.Ui.Wpf.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please wait....
+        /// </summary>
+        internal static string BusyIndicatorContent {
+            get {
+                return ResourceManager.GetString("BusyIndicatorContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         internal static string CancelButtonLabel {

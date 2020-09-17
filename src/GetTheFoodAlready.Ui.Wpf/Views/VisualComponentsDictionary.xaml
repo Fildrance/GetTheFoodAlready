@@ -8,7 +8,7 @@
                     >
 
 	<BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
-	
+
 	<DataTemplate DataType="{x:Type vm:FoodsListViewModel}">
 		<DataTemplate.Resources>
 			<Style TargetType="Button">
@@ -35,7 +35,7 @@
 				<Label Content="{l:Loc AppLabels/MinimumOrderAmountLabel}"/>
 				<TextBox IsReadOnly="True" Text="{Binding Vendor.MinOrderTotal}"></TextBox>
 			</StackPanel>
-			
+
 			<DataGrid ItemsSource="{Binding FoodItems}" Height="450" IsReadOnly="True" AutoGenerateColumns="False">
 				<DataGrid.Columns>
 					<DataGridTextColumn Width="2*" Binding="{Binding ProductName}" Header="Name" />
@@ -93,8 +93,11 @@
 			                 PageType="Interior"
 			                 Title="{l:Loc PreparationWizardLabels/SetupVendorPageTitle}"
 			                 NextPage="{Binding ElementName=SetupFoodPreferences}"
-			                 PreviousPage="{Binding ElementName=Interior}">
-				<ContentPresenter Content="{Binding SetupVendorPointPreferencesViewModel}" />
+			                 PreviousPage="{Binding ElementName=Interior}"
+							 CanSelectNextPage="{Binding SetupVendorPointPreferencesViewModel.IsReady}">
+				<xctk:BusyIndicator IsBusy="{Binding SetupVendorPointPreferencesViewModel.IsBusy}" BusyContent="{l:Loc PreparationWizardLabels/BusyIndicatorContent}">
+					<ContentPresenter Content="{Binding SetupVendorPointPreferencesViewModel}" />
+				</xctk:BusyIndicator>
 			</xctk:WizardPage>
 
 			<xctk:WizardPage x:Name="SetupFoodPreferences" PageType="Interior"

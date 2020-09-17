@@ -48,6 +48,7 @@ namespace GetTheFoodAlready.DeliveryClubBridge
 			{ "2 часа 30 мин", 150},
 			{ "3 часа 20 мин", 300},
 			{ "24 часа", 24*60 },
+			{ "1 час 45 мин", 95 },
 			{ "2 часа 15 мин", 135 }
 		};
 		#endregion
