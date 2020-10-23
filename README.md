@@ -10,7 +10,7 @@ This application serves two purposes:
  * Behaviours are natural implementation of interception (as it should be, is used to nest some CCC logic - logging, profiling, serving unique ids for logs)
  * ReactiveUI and RX approach enables interesting way to discribe user interaction, enabling throttle on user input etc. Also provides neat way to implement INotifyPropertyChanged on properties using 'ref'
  * MVVM is used to separate models from presentation cleanly
- * Clients from bridges comes with 
+ * Working with third party API comes through bridges - clients and wrapper classes
  * Castle Windsor is used as DI container
 
 ### Other stuff
