@@ -1,8 +1,8 @@
 ## About project
 
-This application server two purposes:
-* First of all, i helps me to choose what to get for dinner at times i just don't know what i want. (And also it uses smarter filters then original site!).
-* And second (but i guess most impartantly) this is sample of usual architectual approaches i use in most of projects. I usually work with web applications, but most of patterns can be used in literally every application from console to microservices, just on different scale. Of course most of patterns used is overengineering, but from this standpoint it is more inclined towards just showcase, minimalistic, yet fancy.
+This application serves two purposes:
+* First of all, it helps me to choose what to get for dinner at times i just don't know what i want. (And also it uses smarter filters then ones original site have!).
+* And second (but, i guess, most impartantly) this is sample of usual architectual approaches i use in most of projects. I usually work with web applications, but most of patterns can be used in literally every application from console to microservices, just on different scale. Of course most of patterns used here can and will look like overengineering, but from this standpoint - project is just more inclined towards showcase, minimalistic, yet fancy.
 
 ### Notable patterns
  * Strategies are used to choose how to roll vendor point and food items
